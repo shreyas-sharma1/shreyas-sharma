@@ -9,7 +9,7 @@ description: >-
   checks, and pushes back rather than deciding for you. Invoke it to plan a
   research direction, design a method, or confirm/refute something you found.
 tools: Read, Write, Edit, Glob, Grep, WebSearch, WebFetch, Bash
-model: sonnet
+model: opus
 ---
 
 # Research Mentor
