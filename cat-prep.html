@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAT Prep Hub | Shreyas Sharma</title>
+    <meta name="description" content="A general CAT preparation hub — exam pattern, section-wise strategy, study plan, resources and a mock score tracker.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f172a;
+            --accent: #2563eb;
+            --accent-soft: #eff6ff;
+            --green: #059669;
+            --green-soft: #ecfdf5;
+            --amber: #d97706;
+            --amber-soft: #fffbeb;
+            --rose: #e11d48;
+            --rose-soft: #fff1f2;
+            --text-main: #334155;
+            --text-light: #64748b;
+            --bg-soft: #f8fafc;
+            --border: #e2e8f0;
+            --white: #ffffff;
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            color: var(--text-main);
+            background: var(--white);
+            line-height: 1.6;
+        }
+
+        /* ── Nav ───────────────────────────── */
+        nav {
+            position: sticky; top: 0; z-index: 50;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 14px 24px;
+        }
+        .nav-brand { font-weight: 800; color: var(--primary); text-decoration: none; font-size: 1rem; }
+        .nav-brand span { color: var(--accent); }
+        .nav-links { display: flex; gap: 18px; flex-wrap: wrap; }
+        .nav-links a { color: var(--text-light); text-decoration: none; font-size: 0.85rem; font-weight: 600; }
+        .nav-links a:hover { color: var(--accent); }
+
+        /* ── Hero ───────────────────────────── */
+        header {
+            padding: 90px 20px 70px;
+            background: linear-gradient(180deg, var(--bg-soft) 0%, var(--white) 100%);
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+        .hero-kicker {
+            display: inline-block; background: var(--accent-soft); color: var(--accent);
+            font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+            padding: 6px 16px; border-radius: 50px; margin-bottom: 18px;
+        }
+        h1 { font-size: 2.8rem; font-weight: 800; color: var(--primary); margin: 0 0 12px; line-height: 1.15; }
+        .hero-sub { color: var(--text-light); max-width: 620px; margin: 0 auto 30px; font-size: 1.05rem; }
+        .hero-cta {
+            display: inline-block; background: var(--accent); color: #fff; text-decoration: none;
+            font-weight: 700; padding: 12px 28px; border-radius: 8px; font-size: 0.95rem;
+            transition: background 0.2s ease;
+        }
+        .hero-cta:hover { background: #1d4ed8; }
+
+        .container { max-width: 960px; margin: 0 auto; padding: 60px 20px; }
+        section { margin-bottom: 80px; }
+        h2 {
+            font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px;
+            color: var(--accent); margin-bottom: 8px;
+            display: flex; align-items: center;
+        }
+        h2::after { content: ""; flex: 1; height: 1px; background: var(--border); margin-left: 20px; }
+        .section-title { font-size: 1.6rem; font-weight: 800; color: var(--primary); margin: 0 0 24px; }
+
+        .card {
+            padding: 26px; border-radius: 12px; background: var(--white);
+            border: 1px solid var(--border); transition: all 0.3s ease; margin-bottom: 18px;
+        }
+        .card:hover { border-color: var(--accent); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+
+        /* ── Exam overview grid ─────────────── */
+        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px; }
+        .stat { background: var(--bg-soft); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center; }
+        .stat-num { font-size: 1.7rem; font-weight: 800; color: var(--primary); }
+        .stat-label { font-size: 0.8rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+
+        table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+        th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--border); }
+        th { color: var(--primary); font-weight: 700; background: var(--bg-soft); }
+        .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; }
+        .note { font-size: 0.8rem; color: var(--text-light); margin-top: 10px; }
+
+        /* ── Section strategy cards ─────────── */
+        .sec-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 18px; }
+        .sec-card { border-top: 4px solid var(--accent); }
+        .sec-card.varc { border-top-color: var(--accent); }
+        .sec-card.dilr { border-top-color: var(--amber); }
+        .sec-card.qa   { border-top-color: var(--green); }
+        .sec-tag { font-size: 0.72rem; font-weight: 700; padding: 4px 12px; border-radius: 50px; display: inline-block; margin-bottom: 12px; }
+        .sec-card.varc .sec-tag { background: var(--accent-soft); color: var(--accent); }
+        .sec-card.dilr .sec-tag { background: var(--amber-soft); color: var(--amber); }
+        .sec-card.qa   .sec-tag { background: var(--green-soft); color: var(--green); }
+        .sec-card h3 { margin: 0 0 8px; color: var(--primary); font-size: 1.15rem; }
+        .sec-card ul { padding-left: 18px; margin: 10px 0 0; font-size: 0.9rem; }
+        .sec-card li { margin-bottom: 8px; }
+
+        /* ── Study plan timeline ────────────── */
+        .phase { display: flex; gap: 20px; margin-bottom: 6px; }
+        .phase-marker { display: flex; flex-direction: column; align-items: center; }
+        .phase-dot {
+            width: 34px; height: 34px; border-radius: 50%; background: var(--accent);
+            color: #fff; font-weight: 800; font-size: 0.85rem;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .phase-line { width: 2px; flex: 1; background: var(--border); margin: 6px 0; }
+        .phase:last-child .phase-line { display: none; }
+        .phase-body { padding-bottom: 28px; }
+        .phase-body h3 { margin: 4px 0 4px; color: var(--primary); font-size: 1.1rem; }
+        .phase-meta { font-size: 0.8rem; color: var(--text-light); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        .phase-body p { margin: 8px 0 0; font-size: 0.92rem; }
+
+        /* ── Resources ──────────────────────── */
+        .res-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 18px; }
+        .res-card h3 { margin: 0 0 10px; color: var(--primary); font-size: 1.05rem; }
+        .res-card ul { padding-left: 18px; margin: 0; font-size: 0.9rem; }
+        .res-card li { margin-bottom: 8px; }
+
+        /* ── Mock tracker ───────────────────── */
+        .tracker-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-bottom: 18px; }
+        .tracker-form label { font-size: 0.75rem; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 4px; }
+        .tracker-form input {
+            width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px;
+            font-family: inherit; font-size: 0.9rem; color: var(--text-main);
+        }
+        .tracker-form input:focus { outline: 2px solid var(--accent); border-color: var(--accent); }
+        .btn {
+            background: var(--accent); color: #fff; border: none; border-radius: 8px;
+            padding: 11px 22px; font-family: inherit; font-weight: 700; font-size: 0.9rem; cursor: pointer;
+        }
+        .btn:hover { background: #1d4ed8; }
+        .btn-ghost { background: transparent; color: var(--rose); border: 1px solid var(--border); }
+        .btn-ghost:hover { background: var(--rose-soft); border-color: var(--rose); }
+        .btn-row { display: flex; gap: 10px; align-items: end; }
+        .empty-msg { color: var(--text-light); font-size: 0.9rem; font-style: italic; }
+        td .del { background: none; border: none; color: var(--rose); cursor: pointer; font-weight: 700; font-size: 0.85rem; padding: 2px 6px; }
+
+        /* ── Tips ───────────────────────────── */
+        .tip { display: flex; gap: 14px; align-items: flex-start; padding: 16px 0; border-bottom: 1px solid var(--border); }
+        .tip:last-child { border-bottom: none; }
+        .tip-icon { font-size: 1.3rem; flex-shrink: 0; }
+        .tip strong { color: var(--primary); }
+        .tip p { margin: 2px 0 0; font-size: 0.92rem; }
+
+        footer { text-align: center; padding: 40px 20px; background: var(--primary); color: white; }
+        .contact-link { color: #93c5fd; text-decoration: none; margin: 0 10px; font-weight: 500; }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2rem; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a class="nav-brand" href="#top">CAT<span>Prep</span> Hub</a>
+    <div class="nav-links">
+        <a href="#overview">Exam Overview</a>
+        <a href="#sections">Sections</a>
+        <a href="#plan">Study Plan</a>
+        <a href="#resources">Resources</a>
+        <a href="#tracker">Mock Tracker</a>
+        <a href="INDEX.html">Portfolio ↗</a>
+    </div>
+</nav>
+
+<header id="top">
+    <div class="hero-kicker">Road to the IIMs</div>
+    <h1>My CAT Preparation Hub</h1>
+    <p class="hero-sub">One place for everything CAT — the exam pattern, section-wise strategy, a phased study plan, curated resources, and a tracker for my mock scores.</p>
+    <a class="hero-cta" href="#plan">See the Study Plan</a>
+</header>
+
+<div class="container">
+
+    <!-- ── Exam Overview ─────────────────── -->
+    <section id="overview">
+        <h2>Exam Overview</h2>
+        <p class="section-title">What the CAT looks like</p>
+
+        <div class="stat-grid">
+            <div class="stat"><div class="stat-num">3</div><div class="stat-label">Sections</div></div>
+            <div class="stat"><div class="stat-num">120</div><div class="stat-label">Minutes</div></div>
+            <div class="stat"><div class="stat-num">~68</div><div class="stat-label">Questions</div></div>
+            <div class="stat"><div class="stat-num">+3 / −1</div><div class="stat-label">Marking (MCQ)</div></div>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>Section</th><th>Focus</th><th>Time</th><th>Approx. Questions</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>VARC</strong></td><td>Reading Comprehension, Para Jumbles, Para Summary, Odd One Out</td><td>40 min</td><td>~24</td></tr>
+                    <tr><td><strong>DILR</strong></td><td>Data Interpretation sets, Logical Reasoning puzzles</td><td>40 min</td><td>~22</td></tr>
+                    <tr><td><strong>QA</strong></td><td>Arithmetic, Algebra, Geometry, Number System, Modern Math</td><td>40 min</td><td>~22</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p class="note">Pattern based on recent CAT papers — sectional time limits are fixed and you cannot switch between sections. TITA (type-in-the-answer) questions carry no negative marking. Always confirm the latest pattern on the official CAT website (iimcat.ac.in) once the notification is out.</p>
+    </section>
+
+    <!-- ── Section Strategy ──────────────── -->
+    <section id="sections">
+        <h2>Section-wise Strategy</h2>
+        <p class="section-title">How I'm attacking each section</p>
+
+        <div class="sec-grid">
+            <div class="card sec-card varc">
+                <span class="sec-tag">Section 1</span>
+                <h3>VARC — Verbal Ability &amp; Reading Comprehension</h3>
+                <ul>
+                    <li>Read 30–45 minutes daily — editorials, essays, non-fiction — to build reading stamina.</li>
+                    <li>RC is ~70% of the section: practice 2 passages a day with a timer.</li>
+                    <li>For para jumbles &amp; summaries, focus on logical flow, not grammar tricks.</li>
+                    <li>Accuracy over attempts — eliminate two options, then decide.</li>
+                </ul>
+            </div>
+
+            <div class="card sec-card dilr">
+                <span class="sec-tag">Section 2</span>
+                <h3>DILR — Data Interpretation &amp; Logical Reasoning</h3>
+                <ul>
+                    <li>Set selection is the game: spend the first 3–4 minutes scanning all sets and picking the easiest 3.</li>
+                    <li>Practice full sets, not isolated questions — one set daily minimum.</li>
+                    <li>Master common frameworks: arrangements, grouping, games &amp; tournaments, Venn diagrams, tables/charts.</li>
+                    <li>Know when to abandon a set — sunk-cost thinking kills this section.</li>
+                </ul>
+            </div>
+
+            <div class="card sec-card qa">
+                <span class="sec-tag">Section 3</span>
+                <h3>QA — Quantitative Ability</h3>
+                <ul>
+                    <li>Arithmetic first (percentages, ratios, TSD, profit &amp; loss) — it's the biggest chunk.</li>
+                    <li>Then Algebra and Geometry; Number System and Modern Math last.</li>
+                    <li>Maintain a formula + shortcuts notebook and revise it weekly.</li>
+                    <li>Solve untimed for concepts first, then shift to timed sets for speed.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── Study Plan ────────────────────── -->
+    <section id="plan">
+        <h2>Study Plan</h2>
+        <p class="section-title">A phased roadmap to exam day</p>
+
+        <div class="phase">
+            <div class="phase-marker"><div class="phase-dot">1</div><div class="phase-line"></div></div>
+            <div class="phase-body">
+                <div class="phase-meta">Phase 1 · Foundations · ~3 months</div>
+                <h3>Build concepts from scratch</h3>
+                <p>Cover the full QA syllabus topic by topic, start daily reading for VARC, and solve one DILR set a day. No mocks yet — the goal is coverage and clarity, not speed. Target: finish basics of every topic at least once.</p>
+            </div>
+        </div>
+
+        <div class="phase">
+            <div class="phase-marker"><div class="phase-dot">2</div><div class="phase-line"></div></div>
+            <div class="phase-body">
+                <div class="phase-meta">Phase 2 · Practice &amp; Speed · ~3 months</div>
+                <h3>Timed sectional practice</h3>
+                <p>Shift to timed sectional tests (2–3 per week), previous-year CAT papers, and topic-wise drills on weak areas. Take one full mock every two weeks to establish a baseline and get used to the interface.</p>
+            </div>
+        </div>
+
+        <div class="phase">
+            <div class="phase-marker"><div class="phase-dot">3</div><div class="phase-line"></div></div>
+            <div class="phase-body">
+                <div class="phase-meta">Phase 3 · Mock Season · final 2–3 months</div>
+                <h3>Mocks + deep analysis</h3>
+                <p>1–2 full mocks per week, each followed by a 2–3 hour analysis session: why every wrong answer was wrong, which questions I should have skipped, and where time leaked. The analysis matters more than the mock itself.</p>
+            </div>
+        </div>
+
+        <div class="phase">
+            <div class="phase-marker"><div class="phase-dot">4</div><div class="phase-line"></div></div>
+            <div class="phase-body">
+                <div class="phase-meta">Phase 4 · Taper · last 2 weeks</div>
+                <h3>Revise, rest, peak on the day</h3>
+                <p>No new topics. Revise the formula notebook and mock error log, take 2–3 light mocks at the actual slot time, fix the sleep schedule, and go in fresh.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── Resources ─────────────────────── -->
+    <section id="resources">
+        <h2>Resources</h2>
+        <p class="section-title">What I'm studying from</p>
+
+        <div class="res-grid">
+            <div class="card res-card">
+                <h3>📚 Books</h3>
+                <ul>
+                    <li><em>How to Prepare for Quantitative Aptitude for the CAT</em> — Arun Sharma</li>
+                    <li><em>How to Prepare for VARC for the CAT</em> — Arun Sharma &amp; Meenakshi Upadhyay</li>
+                    <li><em>Logical Reasoning and Data Interpretation for the CAT</em> — Nishit K. Sinha</li>
+                    <li><em>Word Power Made Easy</em> — Norman Lewis (vocab, light reading)</li>
+                </ul>
+            </div>
+
+            <div class="card res-card">
+                <h3>🧪 Mocks &amp; Test Series</h3>
+                <ul>
+                    <li>Previous-year CAT papers (free on the official site) — non-negotiable.</li>
+                    <li>One full-length mock series from a major institute (SIMCATs / AIMCATs / CL mocks).</li>
+                    <li>Sectional tests for targeted practice on weak areas.</li>
+                </ul>
+            </div>
+
+            <div class="card res-card">
+                <h3>🌐 Free &amp; Daily Practice</h3>
+                <ul>
+                    <li>Daily editorials (The Hindu, Indian Express, Aeon essays) for RC stamina.</li>
+                    <li>YouTube concept playlists for tricky QA topics.</li>
+                    <li>Daily LRDI set + RC passage communities/forums for fresh practice material.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── Mock Tracker ──────────────────── -->
+    <section id="tracker">
+        <h2>Mock Tracker</h2>
+        <p class="section-title">Log every mock, watch the trend</p>
+
+        <div class="card">
+            <div class="tracker-form">
+                <div><label for="m-name">Mock Name</label><input id="m-name" type="text" placeholder="e.g. SIMCAT 4"></div>
+                <div><label for="m-date">Date</label><input id="m-date" type="date"></div>
+                <div><label for="m-varc">VARC</label><input id="m-varc" type="number" placeholder="0"></div>
+                <div><label for="m-dilr">DILR</label><input id="m-dilr" type="number" placeholder="0"></div>
+                <div><label for="m-qa">QA</label><input id="m-qa" type="number" placeholder="0"></div>
+                <div class="btn-row"><button class="btn" onclick="addMock()">Add Mock</button></div>
+            </div>
+
+            <div class="table-wrap" id="mock-table-wrap" style="display:none;">
+                <table>
+                    <thead>
+                        <tr><th>Mock</th><th>Date</th><th>VARC</th><th>DILR</th><th>QA</th><th>Total</th><th></th></tr>
+                    </thead>
+                    <tbody id="mock-rows"></tbody>
+                </table>
+            </div>
+            <p class="empty-msg" id="mock-empty">No mocks logged yet — scores are saved in your browser, so they'll still be here next visit.</p>
+            <p style="margin-top:14px;"><button class="btn btn-ghost" onclick="clearMocks()">Clear all</button></p>
+        </div>
+    </section>
+
+    <!-- ── Tips ──────────────────────────── -->
+    <section id="tips">
+        <h2>Golden Rules</h2>
+        <p class="section-title">Things toppers repeat every year</p>
+
+        <div class="card">
+            <div class="tip"><div class="tip-icon">🎯</div><div><strong>Accuracy beats attempts.</strong><p>A 99+ percentile rarely needs more than 60–65% of the paper attempted — attempted <em>correctly</em>.</p></div></div>
+            <div class="tip"><div class="tip-icon">🔍</div><div><strong>Analyse every mock like a post-mortem.</strong><p>A mock without 2 hours of analysis is a wasted mock. Keep an error log and revisit it weekly.</p></div></div>
+            <div class="tip"><div class="tip-icon">⏭️</div><div><strong>Learn to skip.</strong><p>The best test-takers are the best skippers. Every minute stuck on a bad question is a minute stolen from an easy one.</p></div></div>
+            <div class="tip"><div class="tip-icon">📈</div><div><strong>Consistency &gt; intensity.</strong><p>Three focused hours daily beats a 12-hour Sunday binge. Momentum compounds.</p></div></div>
+            <div class="tip"><div class="tip-icon">🧘</div><div><strong>Percentile panic is optional.</strong><p>Mock percentiles fluctuate wildly. Track your own score trend, not the leaderboard.</p></div></div>
+        </div>
+    </section>
+
+</div>
+
+<footer>
+    <p>Built as part of my CAT preparation journey.</p>
+    <a href="INDEX.html" class="contact-link">Portfolio</a>
+    <a href="https://www.linkedin.com/in/shreyas-sharma-43b577383" class="contact-link" target="_blank">LinkedIn</a>
+    <p style="font-size: 0.8rem; margin-top: 20px; opacity: 0.6;">© 2026 Shreyas Sharma · CAT Prep Hub</p>
+</footer>
+
+<script>
+    const KEY = 'catprep-mocks';
+
+    function getMocks() {
+        try { return JSON.parse(localStorage.getItem(KEY)) || []; }
+        catch { return []; }
+    }
+    function saveMocks(mocks) { localStorage.setItem(KEY, JSON.stringify(mocks)); }
+
+    function addMock() {
+        const name = document.getElementById('m-name').value.trim();
+        const date = document.getElementById('m-date').value;
+        const varc = Number(document.getElementById('m-varc').value) || 0;
+        const dilr = Number(document.getElementById('m-dilr').value) || 0;
+        const qa   = Number(document.getElementById('m-qa').value) || 0;
+        if (!name) { alert('Give the mock a name (e.g. "SIMCAT 4").'); return; }
+
+        const mocks = getMocks();
+        mocks.push({ name, date, varc, dilr, qa });
+        saveMocks(mocks);
+        ['m-name','m-date','m-varc','m-dilr','m-qa'].forEach(id => document.getElementById(id).value = '');
+        render();
+    }
+
+    function deleteMock(i) {
+        const mocks = getMocks();
+        mocks.splice(i, 1);
+        saveMocks(mocks);
+        render();
+    }
+
+    function clearMocks() {
+        if (getMocks().length && confirm('Delete all logged mocks?')) {
+            localStorage.removeItem(KEY);
+            render();
+        }
+    }
+
+    function render() {
+        const mocks = getMocks();
+        const wrap = document.getElementById('mock-table-wrap');
+        const empty = document.getElementById('mock-empty');
+        const rows = document.getElementById('mock-rows');
+
+        if (!mocks.length) { wrap.style.display = 'none'; empty.style.display = 'block'; return; }
+        wrap.style.display = 'block';
+        empty.style.display = 'none';
+
+        rows.innerHTML = mocks.map((m, i) => {
+            const total = m.varc + m.dilr + m.qa;
+            const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+            return `<tr>
+                <td><strong>${esc(m.name)}</strong></td>
+                <td>${esc(m.date || '—')}</td>
+                <td>${m.varc}</td>
+                <td>${m.dilr}</td>
+                <td>${m.qa}</td>
+                <td><strong>${total}</strong></td>
+                <td><button class="del" onclick="deleteMock(${i})" title="Delete">✕</button></td>
+            </tr>`;
+        }).join('');
+    }
+
+    render();
+</script>
+
+</body>
+</html>
