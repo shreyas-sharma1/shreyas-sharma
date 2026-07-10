@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Question Solver — CATprep Pro</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="wrap wrap-narrow">
+    <div class="hero" style="padding-top:26px;">
+      <h1>AI Question <em>Solver</em></h1>
+      <p>Type it, dictate it, or upload a photo — get a full step-by-step solution plus the fastest exam-hall approach. Then paste your own attempt and get it graded like a real examiner would.</p>
+    </div>
+
+    <details class="topic" id="key-panel">
+      <summary>🔑 API Key Setup <span id="key-status" style="float:none; margin-left:10px;"></span></summary>
+      <div class="body">
+        <p style="font-size:0.9rem; color:var(--text-dim);">
+          The AI tutor runs on Anthropic's Claude. You need your own API key from
+          <a href="https://console.anthropic.com/" target="_blank" rel="noopener">console.anthropic.com</a>
+          (Settings → API Keys). The key is stored <strong>only in this browser's local storage</strong> and is sent
+          directly from your browser to Anthropic — it never touches any other server. Don't use a shared computer.
+        </p>
+        <label class="field-label">Anthropic API key</label>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <input type="password" id="key-input" placeholder="sk-ant-..." style="flex:1; min-width:220px;">
+          <button class="btn" onclick="saveKey()">Save key</button>
+          <button class="btn secondary" onclick="clearKey()">Remove key</button>
+        </div>
+      </div>
+    </details>
+
+    <!-- ============ SOLVER ============ -->
+    <h2 class="section-title">1 · Solve a question</h2>
+    <div class="card">
+      <label class="field-label">Question (type it, or use 🎤 / 📷 below)</label>
+      <textarea id="q-text" placeholder="e.g. A train 240 m long crosses a platform of length 360 m in 30 seconds. Find its speed in km/h."></textarea>
+
+      <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
+        <button class="btn secondary mic-btn" onclick="toggleDictation('q-text', this)">🎤 Dictate</button>
+        <label class="btn secondary" style="cursor:pointer;">📷 Upload photo
+          <input type="file" id="img-input" accept="image/*" capture="environment" style="display:none;">
+        </label>
+        <button class="btn secondary" id="img-clear" style="display:none;" onclick="clearImage()">✕ Remove photo</button>
+        <button class="btn" id="solve-btn" onclick="solveQuestion()">Solve it</button>
+      </div>
+      <img id="img-preview" class="img-preview" alt="Question photo preview">
+      <div class="ai-output" id="solve-out"></div>
+    </div>
+
+    <!-- ============ ANALYZER ============ -->
+    <h2 class="section-title">2 · Get your own answer analyzed</h2>
+    <div class="card">
+      <p style="color:var(--text-dim); font-size:0.9rem; margin-top:0;">
+        Paste the question and your full attempt (final answer + how you solved it). The AI examiner will verify the
+        answer independently, dissect your reasoning line by line, rate your method's exam-worthiness, and prescribe
+        what to revise. A photo uploaded above is also attached automatically.
+      </p>
+      <label class="field-label">The question</label>
+      <textarea id="a-question" placeholder="Paste the question here (or upload its photo in the section above)"></textarea>
+      <label class="field-label">Your answer & solution</label>
+      <textarea id="a-answer" placeholder="e.g. I got 72 km/h. My approach: total distance = 240+360 = 600 m, time 30 s, so speed = 20 m/s = 72 km/h."></textarea>
+      <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
+        <button class="btn secondary mic-btn" onclick="toggleDictation('a-answer', this)">🎤 Dictate answer</button>
+        <button class="btn" id="analyze-btn" onclick="analyzeAnswer()">Analyze my answer</button>
+      </div>
+      <div class="ai-output" id="analyze-out"></div>
+    </div>
+
+    <div class="notice" style="margin-top:24px;">
+      <strong>Tip:</strong> Use the analyzer even when your answer is right — a correct answer found the slow way still
+      costs you marks elsewhere in the paper. Speed of method matters as much as accuracy in CAT.
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script src="js/solver.js"></script>
+</body>
+</html>

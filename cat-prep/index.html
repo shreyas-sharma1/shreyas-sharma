@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CATprep Pro — Your complete CAT preparation hub</title>
+  <meta name="description" content="AI question solver, 20 mocks with CAT marking, quant formula book, VARC vocabulary & strategies, LRDI playbook, study planner and percentile estimator — everything for CAT prep in one place.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <h1>Everything you need to <em>crack CAT</em>. One place.</h1>
+      <p>An AI tutor that solves any question you throw at it (typed, dictated, or photographed) and grades your own attempts. Twenty timed mocks with real CAT marking. The complete quant formula book, VARC vocabulary, and the LRDI playbook. Built for one job: your percentile.</p>
+      <div style="margin-top:22px;">
+        <a class="btn" href="solver.html">Ask the AI Tutor</a>
+        <a class="btn secondary" href="mocks.html" style="margin-left:8px;">Take a Mock</a>
+      </div>
+    </div>
+
+    <h2 class="section-title">Study modules</h2>
+    <div class="grid cols-3">
+      <a class="card" href="solver.html">
+        <span class="icon">🤖</span>
+        <h3>AI Question Solver</h3>
+        <p>Type, dictate, or photograph any CAT question — get the full solution plus the fastest exam-hall method. Then submit your own attempt for an examiner-style breakdown.</p>
+      </a>
+      <a class="card" href="mocks.html">
+        <span class="icon">📝</span>
+        <h3>Mock Tests</h3>
+        <p>5 sectional mocks each in QA, VARC and LRDI + 5 full-length mocks. Real timer, question palette, +3/−1 marking, TITA questions, and full solutions after submission.</p>
+      </a>
+      <a class="card" href="formulas.html">
+        <span class="icon">🧮</span>
+        <h3>Quant Formula Book</h3>
+        <p>Every CAT QA formula across 14 topics — percentages to P&C — with the shortcuts and memorisation lists (fraction tables, triplets, squares) toppers keep at their fingertips.</p>
+      </a>
+      <a class="card" href="varc.html">
+        <span class="icon">📚</span>
+        <h3>VARC Command Centre</h3>
+        <p>The 100 most important CAT words with usage, plus RC, para jumble, summary and odd-one-out strategies that actually move your percentile.</p>
+      </a>
+      <a class="card" href="lrdi.html">
+        <span class="icon">🧩</span>
+        <h3>LRDI War Room</h3>
+        <p>Set-selection doctrine, playbooks for every set type — arrangements, DI, tournaments, Venn, grouping — and the daily drill plan.</p>
+      </a>
+      <a class="card" href="planner.html">
+        <span class="icon">🗓️</span>
+        <h3>Planner & Tools</h3>
+        <p>Personalised study plan generator, score-to-percentile estimator, exam blueprint, master revision checklist and a CAT-length focus timer.</p>
+      </a>
+    </div>
+
+    <h2 class="section-title">Your progress <small>saved on this device</small></h2>
+    <div id="progress-area"></div>
+
+    <h2 class="section-title">The CATprep method</h2>
+    <div class="grid cols-3">
+      <div class="card">
+        <span class="badge">Step 1</span>
+        <h3>Learn</h3>
+        <p>Work through the Formula Book, VARC and LRDI pages topic by topic. Ten vocab words and one editorial summary daily, no exceptions.</p>
+      </div>
+      <div class="card">
+        <span class="badge purple">Step 2</span>
+        <h3>Test</h3>
+        <p>Sectional mocks under a strict timer from week one. Use the AI analyzer on every question you got wrong or solved slowly.</p>
+      </div>
+      <div class="card">
+        <span class="badge green">Step 3</span>
+        <h3>Review</h3>
+        <p>One hour of analysis per hour of mock. Log every error, re-solve after three days, and rebuild your attempt strategy from data.</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/data/qa.js"></script>
+  <script src="js/data/varc.js"></script>
+  <script src="js/data/lrdi.js"></script>
+  <script src="js/data/mocks.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const results = store.get("results", {});
+      const attempted = Object.keys(results).length;
+      const el = document.getElementById("progress-area");
+      if (attempted === 0) {
+        el.innerHTML = `<div class="notice">No mocks attempted yet. Your scores, accuracy and attempt history will appear here once you <a href="mocks.html">take your first mock</a>.</div>`;
+        return;
+      }
+      let rows = "";
+      for (const m of MOCKS) {
+        const r = results[m.id];
+        if (!r) continue;
+        const att = r.correct + r.wrong;
+        const acc = att ? Math.round((r.correct / att) * 100) : 0;
+        rows += `<tr>
+          <td><a href="mock.html?id=${m.id}">${m.title}</a></td>
+          <td><strong>${r.score}/${r.max}</strong></td>
+          <td>${r.correct}✓ ${r.wrong}✗ ${r.skipped}–</td>
+          <td>${acc}%</td>
+          <td>${r.date}</td>
+        </tr>`;
+      }
+      el.innerHTML = `
+        <p style="color:var(--text-dim); font-size:0.92rem;">${attempted} of ${MOCKS.length} mocks attempted.</p>
+        <div class="table-scroll"><table class="data">
+          <tr><th>Mock</th><th>Score</th><th>C / W / Skipped</th><th>Accuracy</th><th>Date</th></tr>
+          ${rows}
+        </table></div>`;
+    });
+  </script>
+</body>
+</html>

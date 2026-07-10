@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VARC — Vocabulary & Strategies — CATprep Pro</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero" style="padding-top:26px;">
+      <h1>VARC <em>Command Centre</em></h1>
+      <p>Battle-tested strategies for Reading Comprehension and Verbal Ability, plus the 100 words that show up again and again in CAT passages and options.</p>
+    </div>
+
+    <h2 class="section-title">Strategies that actually move your percentile</h2>
+
+    <details class="topic" open>
+      <summary>Reading Comprehension — the 70% of VARC</summary>
+      <div class="body"><ul>
+        <li><strong>Read the passage first, fully, once.</strong> Question-first reading fails in CAT because most questions are inference-based, not fact-lookup. Read for structure: What is the author's point? How does each paragraph serve it?</li>
+        <li><strong>Map the passage in one line per paragraph.</strong> Mentally tag each para: claim / evidence / counterargument / concession / conclusion. CAT questions are about this skeleton, not the details.</li>
+        <li><strong>The author's opinion is gold.</strong> Underline (mentally) every evaluative word — "unfortunately", "remarkably", "critics argue... but". Tone and main-idea questions are decided by these.</li>
+        <li><strong>Eliminate, don't select.</strong> Wrong options are wrong for findable reasons: too extreme (always/never/only), out of scope, distorted (right words, wrong relationship), or half-true. The right answer often feels bland — correct answers are defensible, not exciting.</li>
+        <li><strong>Choose passages, not questions.</strong> In the first minute, skim all 4 passage openings and pick your best 3. A familiar topic + clear writing beats a short but dense passage.</li>
+        <li><strong>Time budget:</strong> ~10 min per RC set (4 min reading, 6 min questions). If a question takes >90 seconds, mark and move.</li>
+        <li><strong>Daily habit:</strong> one editorial (The Hindu / Indian Express / Aeon / Economist) every day, summarised in 3 sentences from memory. This single habit is worth more than any tricks.</li>
+      </ul></div>
+    </details>
+
+    <details class="topic">
+      <summary>Para Jumbles (TITA — no negative marking, always attempt)</summary>
+      <div class="body"><ul>
+        <li><strong>Find the opener:</strong> a sentence that introduces the topic without pronouns ("he", "this", "such") or connectives ("however", "therefore") pointing backwards.</li>
+        <li><strong>Lock mandatory pairs:</strong> noun → pronoun, idea → example ("for instance"), claim → contrast ("but/however/yet"), cause → effect ("as a result", "thus").</li>
+        <li><strong>Chronology and generality:</strong> general statements precede specific ones; earlier events precede later ones.</li>
+        <li><strong>Verify by reading your final order aloud in your head</strong> — flow breaks are easier to hear than to see.</li>
+        <li>Since these are TITA, attempt all of them — a 25% blind hit-rate costs nothing.</li>
+      </ul></div>
+    </details>
+
+    <details class="topic">
+      <summary>Para Summary questions</summary>
+      <div class="body"><ul>
+        <li>The right summary covers the <strong>whole</strong> passage, not just its most vivid sentence.</li>
+        <li>Kill options that: add new information, pick one example as the main point, use extreme language absent in the passage, or reverse the author's stance.</li>
+        <li>Write your own one-line summary <em>before</em> reading the options — then match. This immunises you against cleverly-worded traps.</li>
+      </ul></div>
+    </details>
+
+    <details class="topic">
+      <summary>Odd One Out</summary>
+      <div class="body"><ul>
+        <li>First find the theme connecting any three sentences confidently — the odd one is defined by the majority chain, not by "feel".</li>
+        <li>The odd sentence usually shares <strong>keywords</strong> with the paragraph but breaks its <strong>logical chain</strong> (different time period, different subject, or a claim the paragraph never builds on).</li>
+        <li>Test: can the remaining four be ordered into a coherent paragraph? If not, you removed the wrong one.</li>
+      </ul></div>
+    </details>
+
+    <details class="topic">
+      <summary>Vocabulary strategy — how to actually retain words</summary>
+      <div class="body"><ul>
+        <li>Learn words in <strong>context</strong> (the usage sentence), never as word-meaning pairs. CAT tests words inside passages and options, not in isolation.</li>
+        <li>Batch of 10 words/day → self-quiz the previous 3 days' batches before starting a new one (spaced repetition).</li>
+        <li>Group by <strong>charge</strong>: praise words (laud, magnanimous, sanguine) vs attack words (castigate, denigrate, diatribe) vs neutral-tone words (candid, pragmatic, empirical). Tone questions become trivial.</li>
+        <li>Use each new word once in your own sentence — production beats recognition.</li>
+      </ul></div>
+    </details>
+
+    <h2 class="section-title">The 100 most important CAT words <small>meaning + usage — 10 a day for 10 days</small></h2>
+    <div style="margin-bottom:14px;">
+      <input type="text" id="vocab-search" placeholder="Search words or meanings…" style="max-width:340px;">
+    </div>
+    <div class="grid cols-3" id="vocab-grid"></div>
+  </div>
+
+  <script src="js/data/vocab.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    function renderVocab(filter) {
+      const f = (filter || "").toLowerCase();
+      document.getElementById("vocab-grid").innerHTML = VOCAB
+        .filter(([w, m]) => !f || w.toLowerCase().includes(f) || m.toLowerCase().includes(f))
+        .map(
+          ([w, m, u]) => `<div class="card vocab-card">
+            <div class="word">${w}</div>
+            <div class="meaning">${m}</div>
+            <div class="usage">"${u}"</div>
+          </div>`
+        )
+        .join("") || '<p style="color:var(--text-dim)">No words match.</p>';
+    }
+    document.addEventListener("DOMContentLoaded", () => {
+      renderVocab("");
+      document.getElementById("vocab-search").addEventListener("input", (e) => renderVocab(e.target.value));
+    });
+  </script>
+</body>
+</html>
