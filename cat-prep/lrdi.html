@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LRDI Strategies — CATprep Pro</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="wrap wrap-narrow">
+    <div class="hero" style="padding-top:26px;">
+      <h1>LRDI <em>War Room</em></h1>
+      <p>LRDI is the most rank-deciding section of CAT — it rewards set selection and disciplined solving far more than raw brilliance. Here is the complete playbook.</p>
+    </div>
+
+    <details class="topic" open>
+      <summary>The golden rule: set selection wins the section</summary>
+      <div class="body"><ul>
+        <li>CAT LRDI gives ~4-5 sets; you typically need only <strong>2.5–3 fully-correct sets for a 99 percentile</strong>. The section is a selection test disguised as a solving test.</li>
+        <li><strong>Spend the first 3-4 minutes scanning every set.</strong> Rate each: (a) do I recognise the structure? (b) is the data self-contained? (c) are the questions mostly deterministic (single answer forced by conditions) or "cannot be determined" traps?</li>
+        <li>Order of attack: familiar structure + short data → familiar structure + long data → unfamiliar. Never start with the first set just because it's first.</li>
+        <li><strong>Sunk-cost discipline:</strong> if a set gives you nothing concrete in 4-5 minutes, abandon it without guilt. A half-solved set scores zero; the time is worth ~12 marks elsewhere.</li>
+        <li>Within a chosen set, do all questions — the expensive part (decoding the set) is already paid for. Leaving a set after 2 of 4 questions wastes your setup cost.</li>
+      </ul></div>
+    </details>
+
+    <details class="topic">
+      <summary>Arrangements (linear, circular, grids)</summary>
+      <div class="body"><ul>
+        <li><strong>Draw first, read second.</strong> Sketch the row/circle/grid skeleton before processing clues.</li>
+        <li>Process clues in two passes: pass 1 places the <em>definite</em> facts (fixed positions, "extreme left", "opposite"); pass 2 applies relative clues, branching into at most 2-3 cases.</li>
+        <li>Circular tables: fix one person's seat to kill rotational duplicates. Watch facing direction — for people facing the centre, "left" is clockwise; facing outward, it reverses.</li>
+        <li>Keep a <strong>negative-information margin</strong>: "B not at ends", "C ≠ red" — these often finish the puzzle when positive clues run out.</li>
+        <li>If two cases survive, carry both in parallel columns; often a single question clue collapses one.</li>
+      </ul></div>
+    </details>
+
+    <details class="topic">
+      <summary>Data Interpretation (tables, graphs, caselets)</summary>
+      <div class="body"><ul>
+        <li><strong>Read the fine print first:</strong> units, footnotes, whether figures are cumulative, percentages of what base. Most DI errors are base errors, not calculation errors.</li>
+        <li>Approximate aggressively: options are usually far apart. 90/260 → "a bit less than 90/258 ≈ 35%". Only compute exactly when options are tight or it's TITA.</li>
+        <li>Memorise: fraction↔percentage table (1/6…1/15), squares to 32, cubes to 15, and reciprocals — this is your on-paper calculator.</li>
+        <li>Percentage change comparisons: compare <span class="formula">change⁄base</span> as fractions rather than computing each to decimals.</li>
+        <li>For "how many years/products satisfy X" questions, scan for a counting shortcut before computing every cell.</li>
+      </ul></div>
+    </details>
+
+    <details class="topic">
+      <summary>Games, tournaments & sports sets</summary>
+      <div class="body"><ul>
+        <li>Anchor with <strong>conservation totals</strong>: total points = 2 × matches (win-loss) or matches × points-per-match; total goals scored = total conceded. Verify your grid against these before answering.</li>
+        <li>Round robin of n teams: n(n−1)/2 matches. Knockout of n players: n − 1 matches total.</li>
+        <li>Build the results matrix (teams × teams) and fill both symmetric cells with every clue.</li>
+        <li>Extreme cases first: the team that won everything / lost everything constrains everyone else.</li>
+      </ul></div>
+    </details>
+
+    <details class="topic">
+      <summary>Venn diagrams & set-based caselets</summary>
+      <div class="body"><ul>
+        <li>Always work with the <strong>innermost region outward</strong>: fill "all three" first, then "exactly two", then "exactly one".</li>
+        <li>Know both identities: |A∪B∪C| = ΣA − Σpairs + triple, and Total = exactly-one + exactly-two + exactly-three + none.</li>
+        <li>Maximisation/minimisation questions: to maximise "none", maximise overlap; to minimise an intersection, spread the sets apart. Check feasibility against every constraint.</li>
+        <li>4-set problems: use a table of 16 regions rather than trying to draw 4 circles.</li>
+      </ul></div>
+    </details>
+
+    <details class="topic">
+      <summary>Selection & grouping conditions</summary>
+      <div class="body"><ul>
+        <li>Translate every condition into symbols first: "A and B can't be together" → ¬(A∧B); "if C then D" → C→D (note: D can come without C!).</li>
+        <li>The most-constrained element is your entry point — start casework on it.</li>
+        <li>"If-then" traps: C→D forbids only (C without D). Both present, both absent, and D-alone are all legal.</li>
+        <li>Count systematically by cases (by group size or by inclusion/exclusion of the pivotal member) and check totals with C(n,r) sanity bounds.</li>
+      </ul></div>
+    </details>
+
+    <details class="topic">
+      <summary>Preparation plan for LRDI</summary>
+      <div class="body"><ul>
+        <li><strong>2 sets a day, every day</strong>, alternating LR and DI — consistency beats weekend binges.</li>
+        <li>After every set: log the set type, time taken, and the <em>breakthrough observation</em> you missed. Your error log becomes your personal strategy book.</li>
+        <li>Redo failed sets after a week from scratch. If you fail again, the set type goes on your "recognise and skip in exam" list — knowing what NOT to attempt is a legitimate skill.</li>
+        <li>Sectional mocks (<a href="mocks.html">start here</a>) under strict time > untimed practice, always, from month one.</li>
+        <li>Puzzle cross-training that genuinely helps: Sudoku, Kakuro, and past CAT/XAT sets — not random riddle apps.</li>
+      </ul></div>
+    </details>
+
+    <div class="notice">
+      <strong>Drill it now:</strong> The <a href="mocks.html">LRDI sectional mocks</a> contain 10 sets across all these types. Attempt one mock, then read this page again — the strategies will land differently once you've bled a little.
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

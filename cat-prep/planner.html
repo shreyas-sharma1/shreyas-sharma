@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planner & Tools — CATprep Pro</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="wrap wrap-narrow">
+    <div class="hero" style="padding-top:26px;">
+      <h1>Planner & <em>Tools</em></h1>
+      <p>A personalised study plan, a percentile estimator, the exam blueprint, a revision checklist, and a focus timer — everything around the syllabus that toppers systematise.</p>
+    </div>
+
+    <!-- Study plan -->
+    <h2 class="section-title">📅 Study plan generator</h2>
+    <div class="card">
+      <div class="grid cols-3">
+        <div>
+          <label class="field-label">Exam date</label>
+          <input type="date" id="exam-date">
+        </div>
+        <div>
+          <label class="field-label">Study hours per day</label>
+          <input type="number" id="hours" value="3" min="1" max="12">
+        </div>
+        <div>
+          <label class="field-label">Weakest section</label>
+          <select id="weak">
+            <option value="QA">Quant (QA)</option>
+            <option value="VARC">VARC</option>
+            <option value="LRDI">LRDI</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn" style="margin-top:14px;" onclick="makePlan()">Generate my plan</button>
+      <div class="ai-output" id="plan-out"></div>
+    </div>
+
+    <!-- Percentile predictor -->
+    <h2 class="section-title">📈 Percentile estimator <small>based on recent CAT score-vs-percentile trends — indicative only</small></h2>
+    <div class="card">
+      <label class="field-label">Your mock score (out of 198 — scale up your sectional scores proportionally)</label>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <input type="number" id="score-in" min="-40" max="198" placeholder="e.g. 85" style="max-width:180px;">
+        <button class="btn" onclick="predict()">Estimate percentile</button>
+      </div>
+      <div class="ai-output" id="pct-out"></div>
+      <p style="color:var(--text-dim); font-size:0.82rem;">Mapping varies every year with paper difficulty and normalisation across slots. Treat this as a directional signal, not a guarantee.</p>
+    </div>
+
+    <!-- Exam blueprint -->
+    <h2 class="section-title">🧭 CAT exam blueprint</h2>
+    <div class="table-scroll"><table class="data">
+      <tr><th>Section</th><th>Questions (typical)</th><th>Time</th><th>What it rewards</th></tr>
+      <tr><td>VARC</td><td>~24 (16 RC + 8 VA)</td><td>40 min</td><td>Reading stamina, elimination discipline</td></tr>
+      <tr><td>LRDI</td><td>~22 (4-5 sets)</td><td>40 min</td><td>Set selection, structured casework</td></tr>
+      <tr><td>QA</td><td>~22</td><td>40 min</td><td>Concept clarity + calculation speed</td></tr>
+    </table></div>
+    <ul style="color:var(--text-dim); font-size:0.9rem;">
+      <li>Marking: +3 correct, −1 wrong (MCQ), no negative for TITA. Sections are locked — you cannot switch back.</li>
+      <li>On-screen calculator is available but slow; mental math wins.</li>
+      <li>Accuracy beats attempts: 14 attempts at 95% accuracy outscores 20 attempts at 65%.</li>
+    </ul>
+
+    <!-- Revision checklist -->
+    <h2 class="section-title">✅ Master revision checklist <small>saved on this device</small></h2>
+    <div class="card" id="checklist"></div>
+
+    <!-- Focus timer -->
+    <h2 class="section-title">⏲️ Focus timer <small>study in exam-length blocks</small></h2>
+    <div class="card" style="text-align:center;">
+      <div class="timer" id="focus-timer" style="font-size:2rem; display:inline-block; margin-bottom:14px;">40:00</div>
+      <div>
+        <button class="btn small secondary" onclick="setFocus(40)">40 min (CAT section)</button>
+        <button class="btn small secondary" onclick="setFocus(25)">25 min (Pomodoro)</button>
+        <button class="btn small" id="focus-btn" onclick="toggleFocus()">Start</button>
+      </div>
+      <p style="color:var(--text-dim); font-size:0.85rem;">Train your brain on 40-minute blocks — the exact length of a CAT section. No phone, one topic, full intensity.</p>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    /* ---- Study plan ---- */
+    function makePlan() {
+      const dateVal = document.getElementById("exam-date").value;
+      const hours = +document.getElementById("hours").value || 3;
+      const weak = document.getElementById("weak").value;
+      const out = document.getElementById("plan-out");
+      if (!dateVal) { out.textContent = "Pick your exam date first."; return; }
+      const weeks = Math.max(1, Math.round((new Date(dateVal) - Date.now()) / (7 * 864e5)));
+      const p1 = Math.max(1, Math.round(weeks * 0.5));
+      const p2 = Math.max(1, Math.round(weeks * 0.3));
+      const p3 = Math.max(1, weeks - p1 - p2);
+      const weakShare = Math.round(hours * 0.4 * 10) / 10;
+      const otherShare = Math.round(((hours - weakShare) / 2) * 10) / 10;
+      out.innerHTML =
+        `<strong>${weeks} week(s) to exam · ${hours} hrs/day · extra weight on ${weak}</strong>\n\n` +
+        `<strong>Phase 1 — Concepts (${p1} wk):</strong>\n` +
+        `• Daily: ${weakShare}h ${weak} concepts + practice, ${otherShare}h each on the other two sections.\n` +
+        `• Finish the full syllabus topic-by-topic (use the Quant Formula Book, VARC & LRDI strategy pages here).\n` +
+        `• Daily non-negotiables: 1 editorial summary, 10 vocab words, 2 LRDI sets.\n\n` +
+        `<strong>Phase 2 — Sectionals (${p2} wk):</strong>\n` +
+        `• 1 sectional mock daily (rotate sections; double up on ${weak}).\n` +
+        `• Every mock gets a same-day review + error log entry. Re-solve every wrong question after 3 days.\n\n` +
+        `<strong>Phase 3 — Full mocks & taper (${p3} wk):</strong>\n` +
+        `• 2-3 full-length mocks per week at your actual slot time; full analysis the same day.\n` +
+        `• Rebuild your attempt strategy from mock data: which sets to pick, when to skip, target attempts per section.\n` +
+        `• Last 3 days: only formula/vocab revision and error-log reading. No new material.\n\n` +
+        `Rule of thumb: <strong>every hour of mock needs an hour of analysis.</strong>`;
+    }
+
+    /* ---- Percentile estimator (piecewise linear on indicative anchor points) ---- */
+    const ANCHORS = [ // [score /198, approx percentile]
+      [0, 10], [20, 40], [30, 55], [40, 70], [48, 80], [58, 88], [65, 92],
+      [75, 95], [85, 97], [96, 98.5], [105, 99], [117, 99.5], [135, 99.9], [198, 100],
+    ];
+    function predict() {
+      const s = +document.getElementById("score-in").value;
+      const out = document.getElementById("pct-out");
+      if (isNaN(s)) { out.textContent = "Enter a score first."; return; }
+      const x = Math.max(0, Math.min(198, s));
+      let pct = 100;
+      for (let i = 1; i < ANCHORS.length; i++) {
+        if (x <= ANCHORS[i][0]) {
+          const [x0, y0] = ANCHORS[i - 1], [x1, y1] = ANCHORS[i];
+          pct = y0 + ((x - x0) / (x1 - x0)) * (y1 - y0);
+          break;
+        }
+      }
+      const verdict =
+        pct >= 99 ? "IIM A/B/C interview zone — protect this level and polish accuracy."
+        : pct >= 95 ? "Strong — new IIMs and top non-IIMs in range; push weak section for the 99 jump."
+        : pct >= 85 ? "Solid base — targeted sectional work can add 8-10 percentile."
+        : "Focus on concepts + accuracy before chasing attempts. Percentiles rise fastest at this stage.";
+      out.innerHTML = `Estimated percentile: <strong>~${pct.toFixed(1)}</strong>\n${verdict}`;
+    }
+
+    /* ---- Checklist ---- */
+    const CHECK_ITEMS = [
+      "QA: Arithmetic (percentages, P&L, TSD, work) mastered",
+      "QA: Algebra (quadratics, progressions, logs) mastered",
+      "QA: Geometry + mensuration formulas revised twice",
+      "QA: Number system (remainders, factors, digits) practised",
+      "QA: Modern math (P&C, probability, sets) practised",
+      "VARC: 60+ RC passages solved with review",
+      "VARC: 100 vocabulary words learned in context",
+      "VARC: Para jumble & summary drill (50+ items)",
+      "LRDI: All 10 practice set types attempted",
+      "LRDI: Error log maintained and re-read weekly",
+      "Mocks: All 15 sectional mocks attempted",
+      "Mocks: All 5 full-length mocks attempted + analysed",
+      "Strategy: Personal attempt order & skip rules finalised",
+      "Admit card, slot timing, centre route checked",
+    ];
+    function renderChecklist() {
+      const done = store.get("checklist", {});
+      document.getElementById("checklist").innerHTML = CHECK_ITEMS.map((item, i) =>
+        `<label style="display:flex; gap:10px; align-items:flex-start; padding:7px 0; cursor:pointer; border-bottom:1px solid var(--border); font-size:0.93rem;">
+          <input type="checkbox" ${done[i] ? "checked" : ""} onchange="toggleCheck(${i}, this.checked)" style="margin-top:5px;">
+          <span style="${done[i] ? "text-decoration:line-through; color:var(--text-dim);" : ""}">${item}</span>
+        </label>`).join("");
+    }
+    function toggleCheck(i, val) {
+      const done = store.get("checklist", {});
+      done[i] = val;
+      store.set("checklist", done);
+      renderChecklist();
+    }
+
+    /* ---- Focus timer ---- */
+    let focusSecs = 40 * 60, focusRunning = false, focusInt = null;
+    function setFocus(mins) {
+      focusSecs = mins * 60; stopFocus(); paint();
+    }
+    function paint() { document.getElementById("focus-timer").textContent = fmtTime(focusSecs); }
+    function stopFocus() {
+      focusRunning = false; clearInterval(focusInt);
+      document.getElementById("focus-btn").textContent = "Start";
+    }
+    function toggleFocus() {
+      if (focusRunning) { stopFocus(); return; }
+      focusRunning = true;
+      document.getElementById("focus-btn").textContent = "Pause";
+      focusInt = setInterval(() => {
+        focusSecs--;
+        if (focusSecs <= 0) { focusSecs = 0; stopFocus(); alert("Block done. Take a 5-minute break, then review what you solved."); }
+        paint();
+      }, 1000);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => { renderChecklist(); paint(); });
+  </script>
+</body>
+</html>

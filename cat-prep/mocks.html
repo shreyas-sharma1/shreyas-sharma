@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mocks — CATprep Pro</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero" style="padding-top:26px;">
+      <h1>Mock <em>Tests</em></h1>
+      <p>15 sectional mocks (5 each in QA, VARC, LRDI) and 5 full-length mocks. Real CAT marking: MCQ +3/−1, TITA +3/0, timed at CAT pace (~1.8 min per question). Your best attempt is saved on this device.</p>
+    </div>
+
+    <div class="notice">
+      <strong>How to attempt:</strong> Treat every mock like the real exam — no pausing, no notes, no calculator (CAT allows only the on-screen one). After submitting, spend as long reviewing as you spent attempting: every wrong answer is a syllabus gap; every slow correct answer is a technique gap.
+    </div>
+
+    <div id="mock-sections"></div>
+  </div>
+
+  <script src="js/data/qa.js"></script>
+  <script src="js/data/varc.js"></script>
+  <script src="js/data/lrdi.js"></script>
+  <script src="js/data/mocks.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const groups = [
+        ["VARC Sectionals", "varc-", "Reading comprehension + verbal ability, 8 questions, 15 min"],
+        ["LRDI Sectionals", "lrdi-", "2 sets per mock, 8 questions, 15 min"],
+        ["Quant Sectionals", "qa-", "8 questions, 15 min — arithmetic, algebra, geometry, numbers, modern math"],
+        ["Full-Length Mocks", "fl-", "24 questions, 45 min — VARC → LRDI → QA, same order as CAT"],
+      ];
+      const results = store.get("results", {});
+      let html = "";
+      for (const [title, prefix, desc] of groups) {
+        html += `<h2 class="section-title">${title} <small>${desc}</small></h2><div class="grid cols-3">`;
+        for (const m of MOCKS.filter((m) => m.id.startsWith(prefix))) {
+          const r = results[m.id];
+          const badge = r
+            ? `<span class="badge green">Best: ${r.score}/${r.max} · ${r.date}</span>`
+            : `<span class="badge amber">Not attempted</span>`;
+          html += `<a class="card" href="mock.html?id=${m.id}">
+            ${badge}
+            <h3>${m.title}</h3>
+            <p>${m.questions.length} questions · ${Math.round(m.duration / 60)} min</p>
+          </a>`;
+        }
+        html += "</div>";
+      }
+      document.getElementById("mock-sections").innerHTML = html;
+    });
+  </script>
+</body>
+</html>
