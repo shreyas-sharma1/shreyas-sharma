@@ -646,7 +646,15 @@ section { padding: clamp(3.5rem, 9vh, 6rem) 0; }
 
   /* ── Theme ──────────────────────────────────────────────── */
   const root = document.documentElement;
-  const saved = localStorage.getItem('theme');
+
+  /* Storage is unavailable in private modes and sandboxed frames — a bare
+     access throws and would take the rest of this script down with it. */
+  const store = {
+    get(k)    { try { return localStorage.getItem(k); } catch { return null; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch { /* not fatal */ } }
+  };
+
+  const saved = store.get('theme');
   if (saved === 'light' || saved === 'dark') root.setAttribute('data-theme', saved);
 
   document.getElementById('themeBtn').addEventListener('click', () => {
@@ -655,7 +663,7 @@ section { padding: clamp(3.5rem, 9vh, 6rem) 0; }
     const isDark = current === 'dark' || (current !== 'light' && prefersDark);
     const next = isDark ? 'light' : 'dark';
     root.setAttribute('data-theme', next);
-    localStorage.setItem('theme', next);
+    store.set('theme', next);
   });
 
   /* ── Nav: scroll progress, stuck state, active link ──────── */
