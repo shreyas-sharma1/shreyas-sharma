@@ -1,31 +1,70 @@
-# Shreyas Sharma | Professional Portfolio
+# Shreyas Sharma — Portfolio
 
-This repository contains the source code for my professional portfolio website. [cite_start]I am a **Bachelor of Business Administration (BBA)** student at **Keshav Mahavidyalaya, University of Delhi**[cite: 11, 19, 20], focusing on financial analysis, policy relevance, and data-driven decision-making.
+Source for my portfolio site. BBA student at **Keshav Mahavidyalaya, University of Delhi**,
+working on financial analysis, distress prediction, and the policy questions that sit
+underneath both.
 
-## 🚀 Featured Research (Core USP)
-**Financial Distress Prediction: Altman Z-Score vs AI (Ongoing)**
-* **Objective:** A comparative analysis between traditional financial distress models and modern AI-based approaches.
-* **Scope:** Examining the limitations of ratio-based models and their relevance to current policy frameworks.
-* **Data:** Utilizing real-world Indian companies as primary case studies for model validation.
+**Live:** https://shreyas-sharma1.github.io/shreyas-sharma/
 
-## 💼 Experience & Leadership
-* [cite_start]**Leo Club – University of Delhi (KMV):** Member[cite: 13, 14, 16]. Led the first drive of the session, coordinating planning and execution. Developed an interactive financial literacy model for rural outreach that was adopted for club-wide use.
-* [cite_start]**Project Vitt Vichaar:** Member[cite: 15, 16, 17]. Contributing to financial management and literacy initiatives.
+## Featured research
 
-## 🛠️ Technical Skills & Certifications
-* [cite_start]**Skills:** Excel Modeling, Financial Analysis, and Interpreting Data[cite: 5, 6, 7].
-* [cite_start]**Certification:** Vista Equity Partners – Demystifying Private Equity Job Simulation[cite: 9].
+**Financial Distress Prediction: Altman Z-Score vs. AI** *(ongoing)*
 
-## 🎓 Education
-* [cite_start]**Keshav Mahavidyalaya - Delhi University:** Bachelor of Business Administration - BBA (2025 – 2028)[cite: 19, 20].
-* [cite_start]**Lancers Convent School:** Commerce with Maths[cite: 21, 22].
+A comparative study of the classical Z-Score against machine-learning classifiers,
+scored on the same Indian filings over the same holdout period. The interest is less in
+which model wins than in *where* the classical one breaks: sector drift, asset-light
+balance sheets, and coefficients estimated on a market that no longer exists — and what
+that implies for lending screens that still treat the score as settled.
 
----
-## 🌐 Live Website
-View the live version of my portfolio here: 
-**[https://YOUR-GITHUB-USERNAME.github.io](https://YOUR-GITHUB-USERNAME.github.io)**
-*(Replace 'YOUR-GITHUB-USERNAME' with your actual username after enabling GitHub Pages)*
+The site ships a working implementation of the classical half. It computes both variants
+live, from raw line items:
 
-## 📬 Contact
-* [cite_start]**LinkedIn:** [linkedin.com/in/shreyas-sharma-43b577383](https://www.linkedin.com/in/shreyas-sharma-43b577383) [cite: 3]
-* [cite_start]**Email:** shreyassharma0502@gmail.com [cite: 2]
+| Model | Formula | Distress / Grey / Safe |
+| --- | --- | --- |
+| **Z** — listed manufacturers (Altman, 1968) | `1.2·X₁ + 1.4·X₂ + 3.3·X₃ + 0.6·X₄ + 1.0·X₅` | `< 1.81` / `1.81–2.99` / `> 2.99` |
+| **Z″** — non-manufacturers & emerging markets (Altman, 1995) | `6.56·X₁ + 3.26·X₂ + 6.72·X₃ + 1.05·X₄` | `< 1.1` / `1.1–2.6` / `> 2.6` |
+
+Where `X₁` = working capital / assets, `X₂` = retained earnings / assets,
+`X₃` = EBIT / assets, `X₄` = equity / total liabilities (market value for **Z**, book value
+for **Z″**), and `X₅` = sales / assets. The emerging-market credit score adds a constant
+of 3.25 to **Z″**.
+
+Alongside the score, the page breaks out each weighted term's contribution — so it shows
+*why* a firm lands where it lands, not just that it does. The three sample profiles are
+illustrative figures, not real companies.
+
+## Experience
+
+- **Leo Club, Keshav Mahavidyalaya (DU)** — Member, Aug 2025 – present. Coordinated the
+  session's first drive end to end; built an interactive financial literacy model for rural
+  outreach that was adopted for club-wide use.
+- **Project Vitt Vichaar** — Member, Aug 2025 – present. Financial management and literacy
+  initiatives across the university circuit.
+
+## Skills & credentials
+
+Excel modeling · financial analysis · data interpretation · policy research ·
+financial literacy outreach
+
+Certification: **Vista Equity Partners — Demystifying Private Equity** (job simulation).
+
+## Education
+
+- **Keshav Mahavidyalaya, University of Delhi** — BBA, 2025 – 2028
+- **Lancers Convent School** — Commerce with Mathematics
+
+## Running it
+
+`index.html` is the whole site: one file, no build step, no dependencies, no external
+requests. Open it directly, or serve the folder:
+
+```sh
+python3 -m http.server 8000   # → http://localhost:8000
+```
+
+To publish: **Settings → Pages → Deploy from branch → `main` / root.**
+
+## Contact
+
+- **Email:** shreyassharma0502@gmail.com
+- **LinkedIn:** [shreyas-sharma-43b577383](https://www.linkedin.com/in/shreyas-sharma-43b577383)

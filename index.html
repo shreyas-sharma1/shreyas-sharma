@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shreyas Sharma — Finance &amp; Policy Research</title>
+<meta name="description" content="Portfolio of Shreyas Sharma, BBA student at Keshav Mahavidyalaya, University of Delhi. Financial analysis, distress prediction research, and Excel modeling.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📈</text></svg>">
+<style>
+/* ─────────────────────────────────────────────────────────────
+   Tokens
+   ───────────────────────────────────────────────────────────── */
+:root {
+  --bg:        #faf9f6;
+  --bg-tint:   #f3f1eb;
+  --surface:   #ffffff;
+  --ink:       #15171c;
+  --ink-soft:  #3d434f;
+  --muted:     #6b7280;
+  --line:      #e4e0d7;
+  --line-soft: #efece5;
+  --accent:    #3a4ea8;
+  --accent-dim:#e8eaf6;
+  --gold:      #9a7524;
+  --safe:      #2f7d5d;
+  --grey-zone: #b7791f;
+  --distress:  #b23b32;
+  --shadow:    0 1px 2px rgba(21,23,28,.04), 0 12px 32px -12px rgba(21,23,28,.14);
+
+  --serif: ui-serif, "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  --sans:  ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono:  ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
+
+  --measure: 68ch;
+  --gut: clamp(1.25rem, 4vw, 2.5rem);
+  --ease: cubic-bezier(.22,.61,.36,1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:        #101215;
+    --bg-tint:   #16191e;
+    --surface:   #171a1f;
+    --ink:       #eceef2;
+    --ink-soft:  #c3c8d2;
+    --muted:     #8d94a1;
+    --line:      #272c34;
+    --line-soft: #1f242b;
+    --accent:    #96a6ff;
+    --accent-dim:#1c2136;
+    --gold:      #d8b263;
+    --safe:      #5fbd92;
+    --grey-zone: #dcae5a;
+    --distress:  #e5776c;
+    --shadow:    0 1px 2px rgba(0,0,0,.4), 0 18px 40px -18px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"] {
+  --bg:        #101215;
+  --bg-tint:   #16191e;
+  --surface:   #171a1f;
+  --ink:       #eceef2;
+  --ink-soft:  #c3c8d2;
+  --muted:     #8d94a1;
+  --line:      #272c34;
+  --line-soft: #1f242b;
+  --accent:    #96a6ff;
+  --accent-dim:#1c2136;
+  --gold:      #d8b263;
+  --safe:      #5fbd92;
+  --grey-zone: #dcae5a;
+  --distress:  #e5776c;
+  --shadow:    0 1px 2px rgba(0,0,0,.4), 0 18px 40px -18px rgba(0,0,0,.7);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Base
+   ───────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink-soft);
+  font-family: var(--sans);
+  font-size: clamp(1rem, .97rem + .18vw, 1.075rem);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3 { font-family: var(--serif); color: var(--ink); font-weight: 600; line-height: 1.15; letter-spacing: -.015em; margin: 0; }
+p { margin: 0 0 1em; max-width: var(--measure); }
+a { color: inherit; }
+
+::selection { background: var(--accent); color: var(--bg); }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+.wrap { width: min(72rem, 100% - 2 * var(--gut)); margin-inline: auto; }
+.rule { height: 1px; background: var(--line); border: 0; margin: 0; }
+
+.skip {
+  position: absolute; left: -9999px; top: 0; z-index: 99;
+  background: var(--ink); color: var(--bg); padding: .7rem 1.1rem; border-radius: 0 0 8px 0;
+}
+.skip:focus { left: 0; }
+
+/* ─────────────────────────────────────────────────────────────
+   Nav
+   ───────────────────────────────────────────────────────────── */
+.nav {
+  position: sticky; top: 0; z-index: 20;
+  background: color-mix(in srgb, var(--bg) 86%, transparent);
+  backdrop-filter: saturate(180%) blur(14px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .3s var(--ease);
+}
+.nav[data-stuck="true"] { border-bottom-color: var(--line); }
+.nav__inner { display: flex; align-items: center; gap: 1rem; height: 60px; }
+.nav__mark {
+  font-family: var(--serif); font-size: 1.05rem; color: var(--ink);
+  text-decoration: none; letter-spacing: -.01em; margin-right: auto;
+}
+.nav__mark span { color: var(--accent); }
+.nav__links { display: flex; gap: 1.5rem; }
+.nav__links a {
+  font-size: .82rem; letter-spacing: .04em; text-transform: uppercase;
+  color: var(--muted); text-decoration: none; position: relative; padding: .25rem 0;
+  transition: color .2s var(--ease);
+}
+.nav__links a::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 1px;
+  background: var(--accent); transform: scaleX(0); transform-origin: left;
+  transition: transform .3s var(--ease);
+}
+.nav__links a:hover { color: var(--ink); }
+.nav__links a:hover::after, .nav__links a[aria-current="true"]::after { transform: scaleX(1); }
+.nav__links a[aria-current="true"] { color: var(--ink); }
+@media (max-width: 720px) { .nav__links { display: none; } }
+
+.theme-btn {
+  display: grid; place-items: center; width: 34px; height: 34px;
+  border: 1px solid var(--line); border-radius: 50%;
+  background: var(--surface); color: var(--ink-soft); cursor: pointer;
+  transition: border-color .2s var(--ease), transform .2s var(--ease);
+}
+.theme-btn:hover { border-color: var(--accent); transform: rotate(-18deg); }
+.theme-btn svg { width: 16px; height: 16px; }
+:root[data-theme="dark"] .theme-btn .i-sun,
+:root:not([data-theme="light"]) .theme-btn .i-sun { display: none; }
+:root[data-theme="dark"] .theme-btn .i-moon,
+:root:not([data-theme="light"]) .theme-btn .i-moon { display: block; }
+.theme-btn .i-moon { display: none; }
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .theme-btn .i-sun { display: block; }
+  :root:not([data-theme="dark"]) .theme-btn .i-moon { display: none; }
+}
+:root[data-theme="light"] .theme-btn .i-sun { display: block; }
+:root[data-theme="light"] .theme-btn .i-moon { display: none; }
+
+.progress {
+  position: absolute; left: 0; bottom: -1px; height: 2px; width: 100%;
+  background: var(--accent); transform: scaleX(var(--p, 0)); transform-origin: left;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Hero
+   ───────────────────────────────────────────────────────────── */
+.hero { position: relative; padding: clamp(4.5rem, 12vh, 8rem) 0 clamp(3.5rem, 9vh, 6rem); overflow: hidden; }
+.hero__curve { position: absolute; inset: auto 0 0 0; height: 62%; width: 100%; opacity: .5; pointer-events: none; }
+.hero__curve path { fill: none; stroke: var(--accent); stroke-width: 1.25; opacity: .38; }
+.hero__curve .fill { fill: url(#curveFade); stroke: none; opacity: .18; }
+
+.eyebrow {
+  font-family: var(--mono); font-size: .72rem; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--gold); display: flex; align-items: center; gap: .7rem; margin-bottom: 1.4rem;
+}
+.eyebrow::before { content: ""; width: 28px; height: 1px; background: currentColor; }
+
+.hero h1 { font-size: clamp(2.6rem, 7.5vw, 5rem); letter-spacing: -.03em; }
+.hero h1 em { font-style: italic; color: var(--accent); }
+.hero__lede { font-size: clamp(1.05rem, .98rem + .5vw, 1.3rem); color: var(--ink-soft); margin-top: 1.5rem; max-width: 46ch; }
+
+.hero__meta { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; margin-top: 2rem; font-size: .85rem; color: var(--muted); }
+.hero__meta span { display: inline-flex; align-items: center; gap: .45rem; }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--safe); box-shadow: 0 0 0 3px color-mix(in srgb, var(--safe) 22%, transparent); }
+
+.cta-row { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 2.5rem; }
+.btn {
+  display: inline-flex; align-items: center; gap: .5rem;
+  padding: .7rem 1.3rem; border-radius: 999px; font-size: .9rem; font-weight: 500;
+  text-decoration: none; border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+  transition: transform .2s var(--ease), border-color .2s var(--ease), box-shadow .2s var(--ease);
+}
+.btn:hover { transform: translateY(-2px); border-color: var(--accent); box-shadow: var(--shadow); }
+.btn--solid { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.btn--solid:hover { border-color: var(--ink); }
+.btn svg { width: 15px; height: 15px; }
+
+/* ─────────────────────────────────────────────────────────────
+   Sections
+   ───────────────────────────────────────────────────────────── */
+section { padding: clamp(3.5rem, 9vh, 6rem) 0; }
+.sec-head { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 2.5rem; }
+.sec-head__num { font-family: var(--mono); font-size: .75rem; color: var(--muted); letter-spacing: .1em; }
+.sec-head h2 { font-size: clamp(1.6rem, 3.6vw, 2.35rem); }
+.sec-head__line { flex: 1; height: 1px; background: var(--line); }
+
+/* ─────────────────────────────────────────────────────────────
+   Research + model
+   ───────────────────────────────────────────────────────────── */
+.research {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
+  box-shadow: var(--shadow); overflow: hidden;
+}
+.research__head {
+  padding: clamp(1.5rem, 4vw, 2.5rem); border-bottom: 1px solid var(--line-soft);
+  display: grid; gap: 1rem clamp(1.5rem, 4vw, 3rem); align-items: start;
+}
+@media (min-width: 900px) {
+  .research__head { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+}
+.research__head p:last-child { margin-bottom: 0; }
+.badge {
+  display: inline-flex; align-items: center; gap: .45rem;
+  font-family: var(--mono); font-size: .68rem; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--accent); background: var(--accent-dim); padding: .35rem .7rem; border-radius: 999px;
+  margin-bottom: 1.1rem;
+}
+.badge::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.research h3 { font-size: clamp(1.35rem, 3vw, 1.9rem); margin-bottom: .6rem; }
+.research__sub { color: var(--muted); font-size: .9rem; font-family: var(--mono); margin-bottom: 0; }
+
+.model { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); }
+@media (max-width: 860px) { .model { grid-template-columns: 1fr; } }
+
+.model__inputs { padding: clamp(1.25rem, 3.5vw, 2rem); border-right: 1px solid var(--line-soft); }
+@media (max-width: 860px) { .model__inputs { border-right: 0; border-bottom: 1px solid var(--line-soft); } }
+.model__output { padding: clamp(1.25rem, 3.5vw, 2rem); background: var(--bg-tint); }
+
+.seg { display: inline-flex; padding: 3px; background: var(--bg-tint); border: 1px solid var(--line); border-radius: 999px; margin-bottom: 1.5rem; }
+.model__output .seg { background: var(--surface); }
+.seg button {
+  border: 0; background: transparent; cursor: pointer; color: var(--muted);
+  font: inherit; font-size: .8rem; padding: .4rem .95rem; border-radius: 999px;
+  transition: color .2s var(--ease), background .2s var(--ease);
+}
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: var(--shadow); }
+.model__output .seg button[aria-pressed="true"] { background: var(--bg-tint); }
+
+.field { margin-bottom: 1.05rem; }
+.field__row { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: .35rem; }
+.field label { font-size: .85rem; color: var(--ink-soft); }
+.field__hint { font-family: var(--mono); font-size: .7rem; color: var(--muted); }
+.field input[type="number"] {
+  width: 100%; font-family: var(--mono); font-size: .95rem;
+  padding: .5rem .7rem; border: 1px solid var(--line); border-radius: 8px;
+  background: var(--bg); color: var(--ink);
+  transition: border-color .2s var(--ease);
+}
+.field input[type="number"]:focus { border-color: var(--accent); }
+.field input:invalid { border-color: var(--distress); }
+
+.presets { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.4rem; padding-top: 1.4rem; border-top: 1px dashed var(--line); }
+.presets .btn { padding: .4rem .85rem; font-size: .78rem; }
+.presets__label { width: 100%; font-family: var(--mono); font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: .2rem; }
+
+/* Gauge */
+.gauge { width: 100%; max-width: 340px; margin: 0 auto; display: block; }
+.gauge .band { fill: none; stroke-linecap: butt; stroke-width: 13; opacity: .28; }
+.gauge .band--active { opacity: 1; }
+.gauge .needle { stroke: var(--ink); stroke-width: 2.5; stroke-linecap: round; transition: transform .7s var(--ease); transform-origin: 100px 96px; }
+.gauge .hub { fill: var(--ink); }
+.gauge .tick { stroke: var(--muted); stroke-width: 1; opacity: .55; }
+.gauge .tick-label { fill: var(--muted); font-family: var(--mono); font-size: 7.5px; text-anchor: middle; }
+
+.readout { text-align: center; margin-top: -.5rem; }
+.readout__score { font-family: var(--mono); font-size: clamp(2.4rem, 8vw, 3.2rem); color: var(--ink); line-height: 1; font-variant-numeric: tabular-nums; }
+.readout__zone { display: inline-flex; align-items: center; gap: .5rem; margin-top: .7rem; font-size: .85rem; font-weight: 500; padding: .35rem .9rem; border-radius: 999px; border: 1px solid currentColor; }
+.readout__note { font-size: .8rem; color: var(--muted); margin: .9rem auto 0; max-width: 34ch; }
+
+.terms { margin-top: 1.75rem; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+.terms__title { font-family: var(--mono); font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+.term { display: grid; grid-template-columns: 1fr auto; gap: .2rem .8rem; align-items: center; margin-bottom: .7rem; }
+.term__name { font-size: .82rem; color: var(--ink-soft); }
+.term__val { font-family: var(--mono); font-size: .82rem; color: var(--ink); font-variant-numeric: tabular-nums; }
+.term__bar { grid-column: 1 / -1; height: 5px; border-radius: 3px; background: var(--line); overflow: hidden; position: relative; }
+.term__bar i {
+  position: absolute; top: 0; bottom: 0; left: 50%; display: block; border-radius: 3px;
+  background: var(--accent); transition: width .6s var(--ease), left .6s var(--ease), background .3s var(--ease);
+}
+.term__bar i[data-neg="true"] { background: var(--distress); }
+
+.disclosure { margin-top: 1.5rem; }
+.disclosure summary { cursor: pointer; font-size: .82rem; color: var(--muted); list-style: none; display: inline-flex; align-items: center; gap: .4rem; }
+.disclosure summary::-webkit-details-marker { display: none; }
+.disclosure summary::before { content: "+"; font-family: var(--mono); color: var(--accent); }
+.disclosure[open] summary::before { content: "−"; }
+.disclosure__body { margin-top: .9rem; font-size: .85rem; color: var(--muted); }
+.disclosure__body code { font-family: var(--mono); font-size: .82em; background: var(--bg-tint); padding: .1rem .35rem; border-radius: 4px; color: var(--ink-soft); }
+
+.research__notes { padding: clamp(1.25rem, 3.5vw, 2rem); border-top: 1px solid var(--line-soft); }
+.research__notes ul { margin: 0; padding-left: 1.1rem; }
+.research__notes li { margin-bottom: .5rem; }
+.research__notes li::marker { color: var(--accent); }
+
+/* ─────────────────────────────────────────────────────────────
+   Timeline
+   ───────────────────────────────────────────────────────────── */
+.timeline { position: relative; padding-left: 1.75rem; }
+.timeline::before { content: ""; position: absolute; left: 5px; top: .6rem; bottom: .6rem; width: 1px; background: var(--line); }
+.entry { position: relative; padding-bottom: 2.75rem; }
+.entry:last-child { padding-bottom: 0; }
+.entry::before {
+  content: ""; position: absolute; left: calc(-1.75rem + 1px); top: .55rem;
+  width: 9px; height: 9px; border-radius: 50%; background: var(--bg); border: 1.5px solid var(--accent);
+}
+.entry__when { font-family: var(--mono); font-size: .74rem; letter-spacing: .06em; color: var(--muted); text-transform: uppercase; }
+.entry h3 { font-size: 1.2rem; margin: .3rem 0 .15rem; }
+.entry__role { font-size: .88rem; color: var(--accent); margin-bottom: .8rem; }
+.entry ul { margin: 0; padding-left: 1.1rem; }
+.entry li { margin-bottom: .4rem; }
+.entry li::marker { color: var(--line); }
+
+/* ─────────────────────────────────────────────────────────────
+   Skills / education
+   ───────────────────────────────────────────────────────────── */
+.grid-2 { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); }
+.card {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+  padding: 1.5rem; transition: transform .3s var(--ease), border-color .3s var(--ease), box-shadow .3s var(--ease);
+}
+.card:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); box-shadow: var(--shadow); }
+.card h3 { font-size: 1.08rem; margin-bottom: .3rem; }
+.card__meta { font-family: var(--mono); font-size: .75rem; color: var(--muted); }
+.card p { margin-top: .8rem; margin-bottom: 0; font-size: .92rem; }
+
+.pills { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 2rem; }
+.pill {
+  font-size: .85rem; padding: .45rem 1rem; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink-soft);
+  transition: color .2s var(--ease), border-color .2s var(--ease), background .2s var(--ease);
+}
+.pill:hover { color: var(--accent); border-color: var(--accent); background: var(--accent-dim); }
+
+/* ─────────────────────────────────────────────────────────────
+   Footer
+   ───────────────────────────────────────────────────────────── */
+.foot { padding: clamp(3.5rem, 8vh, 5.5rem) 0 3rem; border-top: 1px solid var(--line); background: var(--bg-tint); }
+.foot h2 { font-size: clamp(1.8rem, 5vw, 3rem); margin-bottom: 1rem; }
+.foot__links { display: flex; flex-wrap: wrap; gap: .75rem; margin: 2rem 0 3rem; }
+.foot__base { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; justify-content: space-between; font-size: .78rem; color: var(--muted); font-family: var(--mono); }
+
+/* ─────────────────────────────────────────────────────────────
+   Reveal
+   ───────────────────────────────────────────────────────────── */
+.reveal { opacity: 0; transform: translateY(14px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
+.reveal.is-in { opacity: 1; transform: none; }
+.reveal[data-d="1"] { transition-delay: .08s; }
+.reveal[data-d="2"] { transition-delay: .16s; }
+.reveal[data-d="3"] { transition-delay: .24s; }
+.reveal[data-d="4"] { transition-delay: .32s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<nav class="nav" id="nav">
+  <div class="wrap nav__inner">
+    <a class="nav__mark" href="#top">Shreyas Sharma<span>.</span></a>
+    <div class="nav__links">
+      <a href="#research">Research</a>
+      <a href="#experience">Experience</a>
+      <a href="#skills">Skills</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="Switch colour theme">
+      <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
+      </svg>
+      <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>
+      </svg>
+    </button>
+  </div>
+  <div class="progress" id="progress"></div>
+</nav>
+
+<main id="main">
+<span id="top"></span>
+
+<!-- ── Hero ─────────────────────────────────────────────────── -->
+<header class="hero">
+  <svg class="hero__curve" viewBox="0 0 1200 300" preserveAspectRatio="none" aria-hidden="true">
+    <defs>
+      <linearGradient id="curveFade" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="var(--accent)" stop-opacity=".55"/>
+        <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <path class="fill" d="M0,232 C90,214 150,238 214,205 C288,167 330,196 402,160 C470,126 512,150 578,120 C650,88 700,116 772,84 C846,51 890,74 962,52 C1036,29 1110,36 1200,18 L1200,300 L0,300 Z"/>
+    <path id="curveLine" d="M0,232 C90,214 150,238 214,205 C288,167 330,196 402,160 C470,126 512,150 578,120 C650,88 700,116 772,84 C846,51 890,74 962,52 C1036,29 1110,36 1200,18"/>
+  </svg>
+
+  <div class="wrap">
+    <p class="eyebrow reveal">Finance &middot; Policy &middot; Research</p>
+    <h1 class="reveal" data-d="1">Reading the numbers<br>before they <em>break</em>.</h1>
+    <p class="hero__lede reveal" data-d="2">
+      BBA student at Keshav Mahavidyalaya, University of Delhi, working at the intersection of
+      financial analysis and policy — currently testing where classical distress models hold,
+      and where they quietly fail.
+    </p>
+    <div class="hero__meta reveal" data-d="3">
+      <span><i class="dot"></i> Open to research &amp; internship roles</span>
+      <span>New Delhi, India</span>
+    </div>
+    <div class="cta-row reveal" data-d="4">
+      <a class="btn btn--solid" href="#research">
+        Explore the model
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <a class="btn" href="#contact">Get in touch</a>
+    </div>
+  </div>
+</header>
+
+<!-- ── Research ─────────────────────────────────────────────── -->
+<section id="research" class="wrap">
+  <div class="sec-head reveal">
+    <span class="sec-head__num">01</span>
+    <h2>Featured research</h2>
+    <span class="sec-head__line"></span>
+  </div>
+
+  <article class="research reveal" data-d="1">
+    <div class="research__head">
+      <div>
+        <span class="badge">Ongoing</span>
+        <h3>Financial Distress Prediction: Altman Z-Score vs. AI</h3>
+        <p class="research__sub">Comparative study &middot; Indian corporate case studies</p>
+      </div>
+      <p>
+        A ratio-based model built on 1960s US manufacturers still sits inside credit policy today.
+        This project asks a simple question with awkward answers: how much of its predictive power
+        survives a different market, a different decade, and a machine-learning benchmark?
+        The calculator below is the classical half of that comparison — run it yourself.
+      </p>
+    </div>
+
+    <div class="model">
+      <!-- Inputs -->
+      <form class="model__inputs" id="zForm" novalidate>
+        <div class="seg" role="group" aria-label="Choose model variant">
+          <button type="button" id="btnZ" aria-pressed="true">Z &middot; Manufacturer</button>
+          <button type="button" id="btnZ2" aria-pressed="false">Z″ &middot; Emerging</button>
+        </div>
+
+        <div class="field">
+          <div class="field__row"><label for="wc">Working capital</label><span class="field__hint">₹ crore</span></div>
+          <input type="number" id="wc" value="210" step="any" inputmode="decimal">
+        </div>
+        <div class="field">
+          <div class="field__row"><label for="re">Retained earnings</label><span class="field__hint">₹ crore</span></div>
+          <input type="number" id="re" value="520" step="any" inputmode="decimal">
+        </div>
+        <div class="field">
+          <div class="field__row"><label for="ebit">EBIT</label><span class="field__hint">₹ crore</span></div>
+          <input type="number" id="ebit" value="195" step="any" inputmode="decimal">
+        </div>
+        <div class="field">
+          <div class="field__row">
+            <label for="eq" id="eqLabel">Market value of equity</label><span class="field__hint">₹ crore</span>
+          </div>
+          <input type="number" id="eq" value="1350" step="any" inputmode="decimal">
+        </div>
+        <div class="field">
+          <div class="field__row"><label for="tl">Total liabilities</label><span class="field__hint">₹ crore</span></div>
+          <input type="number" id="tl" value="550" step="any" inputmode="decimal">
+        </div>
+        <div class="field" id="salesField">
+          <div class="field__row"><label for="sales">Net sales</label><span class="field__hint">₹ crore</span></div>
+          <input type="number" id="sales" value="1650" step="any" inputmode="decimal">
+        </div>
+        <div class="field">
+          <div class="field__row"><label for="ta">Total assets</label><span class="field__hint">₹ crore &middot; must be &gt; 0</span></div>
+          <input type="number" id="ta" value="1500" step="any" min="0.0001" inputmode="decimal">
+        </div>
+
+        <div class="presets">
+          <span class="presets__label">Illustrative profiles</span>
+          <button class="btn" type="button" data-preset="healthy">Healthy</button>
+          <button class="btn" type="button" data-preset="grey">Grey zone</button>
+          <button class="btn" type="button" data-preset="distress">Distressed</button>
+        </div>
+      </form>
+
+      <!-- Output -->
+      <div class="model__output">
+        <svg class="gauge" viewBox="0 0 200 118" role="img" aria-labelledby="gaugeTitle">
+          <title id="gaugeTitle">Distress zone gauge</title>
+          <g id="bands"></g>
+          <g id="ticks"></g>
+          <line class="needle" id="needle" x1="100" y1="96" x2="100" y2="36"/>
+          <circle class="hub" cx="100" cy="96" r="4"/>
+        </svg>
+
+        <div class="readout">
+          <div class="readout__score" id="score" aria-live="polite">3.66</div>
+          <div class="readout__zone" id="zone">Safe zone</div>
+          <p class="readout__note" id="note"></p>
+        </div>
+
+        <div class="terms">
+          <div class="terms__title">Contribution by term</div>
+          <div id="termList"></div>
+        </div>
+
+        <details class="disclosure">
+          <summary>Formula &amp; thresholds</summary>
+          <div class="disclosure__body" id="formulaBody"></div>
+        </details>
+      </div>
+    </div>
+
+    <div class="research__notes">
+      <ul>
+        <li>Benchmarking the classical Z-Score against machine-learning classifiers on the same Indian filings, scored on the same holdout period.</li>
+        <li>Probing the failure modes: sector drift, asset-light balance sheets, and coefficients estimated on a market that no longer exists.</li>
+        <li>Tracing what that means downstream — for lending screens and disclosure norms that still treat the score as settled.</li>
+      </ul>
+    </div>
+  </article>
+</section>
+
+<!-- ── Experience ───────────────────────────────────────────── -->
+<section id="experience" class="wrap">
+  <div class="sec-head reveal">
+    <span class="sec-head__num">02</span>
+    <h2>Experience</h2>
+    <span class="sec-head__line"></span>
+  </div>
+
+  <div class="timeline">
+    <article class="entry reveal">
+      <div class="entry__when">Aug 2025 — Present</div>
+      <h3>Leo Club — Keshav Mahavidyalaya, University of Delhi</h3>
+      <div class="entry__role">Member</div>
+      <ul>
+        <li>Coordinated planning and execution of the session's first drive, from scheduling through on-ground delivery.</li>
+        <li>Built an interactive financial literacy model for rural outreach — adopted by the Project Head for club-wide use.</li>
+        <li>Designed project materials and presentations for club initiatives.</li>
+      </ul>
+    </article>
+
+    <article class="entry reveal" data-d="1">
+      <div class="entry__when">Aug 2025 — Present</div>
+      <h3>Project Vitt Vichaar</h3>
+      <div class="entry__role">Member</div>
+      <ul>
+        <li>Contributing to financial management and literacy initiatives across the university circuit.</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<!-- ── Skills ───────────────────────────────────────────────── -->
+<section id="skills" class="wrap">
+  <div class="sec-head reveal">
+    <span class="sec-head__num">03</span>
+    <h2>Skills &amp; credentials</h2>
+    <span class="sec-head__line"></span>
+  </div>
+
+  <div class="pills reveal">
+    <span class="pill">Excel Modeling</span>
+    <span class="pill">Financial Analysis</span>
+    <span class="pill">Data Interpretation</span>
+    <span class="pill">Policy Research</span>
+    <span class="pill">Financial Literacy Outreach</span>
+  </div>
+
+  <div class="grid-2">
+    <div class="card reveal">
+      <h3>Demystifying Private Equity</h3>
+      <div class="card__meta">Vista Equity Partners · Job Simulation</div>
+      <p>Deal screening and value-creation analysis from the sponsor's side of the table.</p>
+    </div>
+    <div class="card reveal" data-d="1">
+      <h3>Keshav Mahavidyalaya, University of Delhi</h3>
+      <div class="card__meta">BBA · 2025 — 2028</div>
+      <p>Coursework in financial management, accounting, and quantitative methods.</p>
+    </div>
+    <div class="card reveal" data-d="2">
+      <h3>Lancers Convent School</h3>
+      <div class="card__meta">Commerce with Mathematics</div>
+      <p>Foundation in accountancy, economics, and mathematics.</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ── Footer ───────────────────────────────────────────────── -->
+<footer class="foot" id="contact">
+  <div class="wrap">
+    <p class="eyebrow reveal">Contact</p>
+    <h2 class="reveal" data-d="1">Let's talk about the numbers.</h2>
+    <p class="reveal" data-d="2" style="max-width:44ch;color:var(--ink-soft)">
+      Always glad to hear from people working on credit risk, corporate finance, or financial
+      literacy — whether that's a research collaboration or a conversation.
+    </p>
+    <div class="foot__links reveal" data-d="3">
+      <a class="btn btn--solid" href="mailto:shreyassharma0502@gmail.com">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
+        shreyassharma0502@gmail.com
+      </a>
+      <a class="btn" href="https://www.linkedin.com/in/shreyas-sharma-43b577383" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-.95 1.83-1.95 3.77-1.95C20.5 8.75 21 11.1 21 14.1V21h-4v-6.1c0-1.45-.03-3.3-2.02-3.3-2.02 0-2.33 1.57-2.33 3.2V21H9z"/></svg>
+        LinkedIn
+      </a>
+    </div>
+    <hr class="rule">
+    <div class="foot__base" style="padding-top:1.5rem">
+      <span>© 2026 Shreyas Sharma</span>
+      <span>Built by hand · no frameworks</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(() => {
+  'use strict';
+
+  /* ── Theme ──────────────────────────────────────────────── */
+  const root = document.documentElement;
+  const saved = localStorage.getItem('theme');
+  if (saved === 'light' || saved === 'dark') root.setAttribute('data-theme', saved);
+
+  document.getElementById('themeBtn').addEventListener('click', () => {
+    const prefersDark = matchMedia('(prefers-color-scheme: dark)').matches;
+    const current = root.getAttribute('data-theme');
+    const isDark = current === 'dark' || (current !== 'light' && prefersDark);
+    const next = isDark ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+
+  /* ── Nav: scroll progress, stuck state, active link ──────── */
+  const nav = document.getElementById('nav');
+  const progress = document.getElementById('progress');
+  const links = [...document.querySelectorAll('.nav__links a')];
+  const sections = links
+    .map(a => document.querySelector(a.getAttribute('href')))
+    .filter(Boolean);
+
+  const onScroll = () => {
+    const max = document.documentElement.scrollHeight - innerHeight;
+    progress.style.setProperty('--p', max > 0 ? scrollY / max : 0);
+    nav.dataset.stuck = scrollY > 8;
+
+    let active = -1;
+    sections.forEach((sec, i) => {
+      if (sec.getBoundingClientRect().top <= innerHeight * 0.35) active = i;
+    });
+    links.forEach((a, i) => a.setAttribute('aria-current', String(i === active)));
+  };
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', onScroll);
+  onScroll();
+
+  /* ── Reveal on enter ────────────────────────────────────── */
+  const items = document.querySelectorAll('.reveal');
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries, obs) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('is-in'); obs.unobserve(e.target); }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+    items.forEach(el => io.observe(el));
+  } else {
+    items.forEach(el => el.classList.add('is-in'));
+  }
+
+  /* ── Hero curve: draw-on ────────────────────────────────── */
+  const curve = document.getElementById('curveLine');
+  if (curve && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const len = curve.getTotalLength();
+    curve.style.strokeDasharray = len;
+    curve.style.strokeDashoffset = len;
+    curve.animate(
+      [{ strokeDashoffset: len }, { strokeDashoffset: 0 }],
+      { duration: 2200, easing: 'cubic-bezier(.22,.61,.36,1)', fill: 'forwards' }
+    );
+  }
+
+  /* ── Altman Z-Score model ───────────────────────────────────
+     Z   (listed manufacturers, Altman 1968)
+       1.2·X1 + 1.4·X2 + 3.3·X3 + 0.6·X4 + 1.0·X5
+     Z'' (non-manufacturing / emerging markets, Altman 1995)
+       6.56·X1 + 3.26·X2 + 6.72·X3 + 1.05·X4′   (EM score = Z'' + 3.25)
+     ─────────────────────────────────────────────────────────── */
+  const MODELS = {
+    z: {
+      label: 'Z',
+      equityLabel: 'Market value of equity',
+      usesSales: true,
+      domain: [-1, 8],
+      cuts: [1.81, 2.99],
+      terms: [
+        { key: 'x1', w: 1.2, name: 'Working capital / Assets' },
+        { key: 'x2', w: 1.4, name: 'Retained earnings / Assets' },
+        { key: 'x3', w: 3.3, name: 'EBIT / Assets' },
+        { key: 'x4', w: 0.6, name: 'Market equity / Liabilities' },
+        { key: 'x5', w: 1.0, name: 'Sales / Assets' }
+      ],
+      formula:
+        '<code>Z = 1.2·X₁ + 1.4·X₂ + 3.3·X₃ + 0.6·X₄ + 1.0·X₅</code>' +
+        '<p style="margin:.7rem 0 0">Altman (1968), estimated on listed US manufacturers. ' +
+        'Distress below <strong>1.81</strong>, safe above <strong>2.99</strong>, grey in between.</p>'
+    },
+    z2: {
+      label: 'Z″',
+      equityLabel: 'Book value of equity',
+      usesSales: false,
+      domain: [-2, 10],
+      cuts: [1.1, 2.6],
+      terms: [
+        { key: 'x1', w: 6.56, name: 'Working capital / Assets' },
+        { key: 'x2', w: 3.26, name: 'Retained earnings / Assets' },
+        { key: 'x3', w: 6.72, name: 'EBIT / Assets' },
+        { key: 'x4', w: 1.05, name: 'Book equity / Liabilities' }
+      ],
+      formula:
+        '<code>Z″ = 6.56·X₁ + 3.26·X₂ + 6.72·X₃ + 1.05·X₄</code>' +
+        '<p style="margin:.7rem 0 0">Altman (1995) for non-manufacturers and emerging markets — ' +
+        'asset turnover is dropped so the score stops punishing asset-light and service firms. ' +
+        'Distress below <strong>1.1</strong>, safe above <strong>2.6</strong>. ' +
+        'The emerging-market credit score adds a constant of 3.25.</p>'
+    }
+  };
+
+  const PRESETS = {
+    healthy:  { wc: 210, re: 520,  ebit: 195, eq: 1350, tl: 550,  sales: 1650, ta: 1500 },
+    grey:     { wc: 120, re: 260,  ebit: 110, eq: 700,  tl: 800,  sales: 1900, ta: 1500 },
+    distress: { wc: -60, re: -120, ebit: -40, eq: 210,  tl: 1350, sales: 780,  ta: 1500 }
+  };
+
+  const ids = ['wc', 're', 'ebit', 'eq', 'tl', 'sales', 'ta'];
+  const el = Object.fromEntries(ids.map(id => [id, document.getElementById(id)]));
+  const scoreEl = document.getElementById('score');
+  const zoneEl = document.getElementById('zone');
+  const noteEl = document.getElementById('note');
+  const termList = document.getElementById('termList');
+  const needle = document.getElementById('needle');
+  const bandsG = document.getElementById('bands');
+  const ticksG = document.getElementById('ticks');
+  const formulaBody = document.getElementById('formulaBody');
+  const eqLabel = document.getElementById('eqLabel');
+  const salesField = document.getElementById('salesField');
+  const btnZ = document.getElementById('btnZ');
+  const btnZ2 = document.getElementById('btnZ2');
+
+  let modelKey = 'z';
+
+  const num = id => {
+    const v = parseFloat(el[id].value);
+    return Number.isFinite(v) ? v : 0;
+  };
+  const fmt = n => (Math.round(n * 100) / 100).toFixed(2);
+
+  /* Gauge geometry: a 180° arc centred at (100, 96), radius 70. */
+  const CX = 100, CY = 96, R = 70;
+  const polar = (frac, r = R) => {
+    const a = Math.PI * (1 - Math.min(1, Math.max(0, frac)));
+    return [CX + r * Math.cos(a), CY - r * Math.sin(a)];
+  };
+  const arc = (f0, f1) => {
+    const [x0, y0] = polar(f0), [x1, y1] = polar(f1);
+    return `M ${x0.toFixed(2)} ${y0.toFixed(2)} A ${R} ${R} 0 0 1 ${x1.toFixed(2)} ${y1.toFixed(2)}`;
+  };
+
+  const svgEl = (tag, attrs) => {
+    const node = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
+    return node;
+  };
+
+  function drawGauge(model) {
+    const [lo, hi] = model.domain;
+    const toFrac = v => (v - lo) / (hi - lo);
+    const [c1, c2] = model.cuts;
+
+    bandsG.replaceChildren();
+    const zones = [
+      { d: arc(0, toFrac(c1)),        color: 'var(--distress)',  id: 0 },
+      { d: arc(toFrac(c1), toFrac(c2)), color: 'var(--grey-zone)', id: 1 },
+      { d: arc(toFrac(c2), 1),        color: 'var(--safe)',      id: 2 }
+    ];
+    zones.forEach(z => bandsG.appendChild(
+      svgEl('path', { class: 'band', d: z.d, stroke: z.color, 'data-zone': z.id })
+    ));
+
+    ticksG.replaceChildren();
+    [lo, c1, c2, hi].forEach(v => {
+      const f = toFrac(v);
+      const [ix, iy] = polar(f, R - 9);
+      const [ox, oy] = polar(f, R + 3);
+      ticksG.appendChild(svgEl('line', { class: 'tick', x1: ix, y1: iy, x2: ox, y2: oy }));
+      const [lx, ly] = polar(f, R - 23);
+      const label = svgEl('text', { class: 'tick-label', x: lx, y: ly + 2.5 });
+      label.textContent = String(v);
+      ticksG.appendChild(label);
+    });
+  }
+
+  function render() {
+    const model = MODELS[modelKey];
+    const ta = num('ta');
+    const tl = num('tl');
+
+    if (!(ta > 0)) {
+      scoreEl.textContent = '—';
+      zoneEl.textContent = 'Total assets must be positive';
+      zoneEl.style.color = 'var(--muted)';
+      noteEl.textContent = 'Every ratio in the model is scaled by total assets.';
+      termList.replaceChildren();
+      needle.style.transform = 'rotate(-90deg)';
+      return;
+    }
+
+    const ratios = {
+      x1: num('wc') / ta,
+      x2: num('re') / ta,
+      x3: num('ebit') / ta,
+      x4: tl !== 0 ? num('eq') / tl : 0,
+      x5: num('sales') / ta
+    };
+
+    const parts = model.terms.map(t => ({ ...t, ratio: ratios[t.key], value: t.w * ratios[t.key] }));
+    const score = parts.reduce((s, p) => s + p.value, 0);
+    const [c1, c2] = model.cuts;
+    const zoneIdx = score < c1 ? 0 : score < c2 ? 1 : 2;
+
+    const ZONES = [
+      { name: 'Distress zone', color: 'var(--distress)',  note: 'Balance-sheet profile resembling firms that failed within two years in the original samples.' },
+      { name: 'Grey zone',     color: 'var(--grey-zone)', note: 'Ambiguous. The model declines to call it — exactly where a second, learned model earns its keep.' },
+      { name: 'Safe zone',     color: 'var(--safe)',      note: 'Profile consistent with firms that stayed solvent across the estimation window.' }
+    ];
+    const zone = ZONES[zoneIdx];
+
+    scoreEl.textContent = fmt(score);
+    scoreEl.style.color = zone.color;
+    zoneEl.textContent = zone.name;
+    zoneEl.style.color = zone.color;
+    noteEl.textContent = modelKey === 'z2'
+      ? `${zone.note} EM credit score: ${fmt(score + 3.25)}.`
+      : zone.note;
+
+    if (tl === 0) noteEl.textContent += ' With zero liabilities, X₄ is treated as 0.';
+
+    bandsG.querySelectorAll('.band').forEach(b =>
+      b.classList.toggle('band--active', Number(b.dataset.zone) === zoneIdx));
+
+    const [lo, hi] = model.domain;
+    const frac = Math.min(1, Math.max(0, (score - lo) / (hi - lo)));
+    needle.style.transform = `rotate(${(frac * 180 - 90).toFixed(2)}deg)`;
+
+    /* Term decomposition — bars diverge from a zero line at centre. */
+    const span = Math.max(1, ...parts.map(p => Math.abs(p.value)));
+    termList.replaceChildren();
+    parts.forEach(p => {
+      const row = document.createElement('div');
+      row.className = 'term';
+      const pct = (Math.abs(p.value) / span) * 50;
+      row.innerHTML =
+        `<span class="term__name">${p.name} <span style="color:var(--muted)">× ${p.w}</span></span>` +
+        `<span class="term__val">${p.value >= 0 ? '+' : '−'}${fmt(Math.abs(p.value))}</span>` +
+        `<span class="term__bar"><i data-neg="${p.value < 0}" style="width:${pct.toFixed(2)}%;` +
+        `left:${(p.value < 0 ? 50 - pct : 50).toFixed(2)}%"></i></span>`;
+      termList.appendChild(row);
+    });
+  }
+
+  function setModel(key) {
+    modelKey = key;
+    const model = MODELS[key];
+    btnZ.setAttribute('aria-pressed', String(key === 'z'));
+    btnZ2.setAttribute('aria-pressed', String(key === 'z2'));
+    eqLabel.textContent = model.equityLabel;
+    salesField.hidden = !model.usesSales;
+    salesField.style.display = model.usesSales ? '' : 'none';
+    formulaBody.innerHTML = model.formula;
+    drawGauge(model);
+    render();
+  }
+
+  ids.forEach(id => el[id].addEventListener('input', render));
+  btnZ.addEventListener('click', () => setModel('z'));
+  btnZ2.addEventListener('click', () => setModel('z2'));
+
+  document.querySelectorAll('[data-preset]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const p = PRESETS[btn.dataset.preset];
+      ids.forEach(id => { el[id].value = p[id]; });
+      render();
+    });
+  });
+
+  setModel('z');
+})();
+</script>
+</body>
+</html>
